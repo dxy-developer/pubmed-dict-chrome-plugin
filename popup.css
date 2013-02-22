@@ -1,0 +1,81 @@
+/* vim: set et sw=4 ts=4 sts=4 ft=css fdm=marker ff=unix fenc=utf8 nobomb: */
+/**
+ * @author mingcheng<lucky#gracecode.com>
+ * @date   2013-02-22
+ * @link   http://www.gracecode.com/
+ */
+
+
+div.pubmed-popup {
+    display: none;
+
+    position: fixed;
+    z-index: 99999;
+
+    left: 100px;
+    top: 100px;
+    
+    font-size: 12px;
+    border: 3px solid #ccc;
+    width: 250px;
+    color: #333;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 3px 3px 15px #999;
+    opacity: .9;
+}
+
+div.pubmed-popup .popup-title {
+    background: #3B5998;
+    padding: .5em;
+    color: #fff;
+    position: relative;
+    cursor: default;
+}
+
+div.pubmed-popup .popup-title .close {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    background: red;
+    position: absolute;
+    right: .5em;
+    top: .5em;
+    cursor: pointer;
+    text-indent: -999em;
+}
+
+div.pubmed-popup .content {
+    padding: 0 .5em .5em .5em;
+    background: #fff;
+}
+
+div.pubmed-popup .content h4 {
+    margin: .5em 0 0 0;
+    font-weight: normal;
+}
+
+div.pubmed-popup .content h4 span {
+    padding-left: .2em;
+    color: #555;
+}
+
+div.pubmed-popup .content .more {
+    display: block;
+    text-align: right;
+    margin-top: .5em;
+}
+
+div.pubmed-popup .content dl {
+    margin: 0;
+}
+
+div.pubmed-popup .content dl dt {
+    font-weight: bold;
+    margin-top: .5em;
+}
+
+div.pubmed-popup .content dl dd {
+    margin: 0;
+}
+

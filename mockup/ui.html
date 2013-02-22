@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="../popup.css" />
+    </head>
+    <body>
+
+
+        <div class="pubmed-popup" id="J_PubMed_Popup">
+            <div class="popup-title"> 医学英汉词典 <a class="close" id="J_PubMed_PopupClose" title="关闭">Close</a> </div>
+            <div class="content">
+            <h4>{word} <span>({phonetic})</span></h4>
+            <dl>
+                <dt>含义</dt>
+                <dd>{definition}</dd>
+
+                <dt>例句</dt>
+                <dd>{sentences}</dd>
+            <dl>
+            <a href="http://dict.pubmed.cn/{word}.htm" class="more">详细…</a>
+            </div>
+        </div>
+
+
+
+
+<h1 class="page_title">Cross-Origin XMLHttpRequest</h1>
+
+
+
+
+<p id="classSummary">
+Regular web pages can use the
+<a href="http://www.w3.org/TR/XMLHttpRequest/">XMLHttpRequest</a>
+object to send and receive data from remote servers,
+but they're limited by the
+<a href="http://en.wikipedia.org/wiki/Same_origin_policy">same origin policy</a>.
+Extensions aren't so limited.
+An extension can talk to remote servers outside of its origin,
+as long as it first requests cross-origin permissions.</p>
+
+<h2 id="extension-origin">Extension origin</h2>
+<p>Each running extension exists within its own separate security origin. Without
+requesting additional privileges, the extension can use
+XMLHttpRequest to get resources within its installation. For example, if
+an extension contains a JSON configuration file called <code>config.json</code>,
+in a <code>config_resources</code> folder, the extension can retrieve the file's contents like
+this:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> xhr </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">onreadystatechange </span><span class="pun">=</span><span class="pln"> handleStateChange</span><span class="pun">;</span><span class="pln"> </span><span class="com">// Implemented elsewhere.</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">"GET"</span><span class="pun">,</span><span class="pln"> chrome</span><span class="pun">.</span><span class="pln">extension</span><span class="pun">.</span><span class="pln">getURL</span><span class="pun">(</span><span class="str">'/config_resources/config.json'</span><span class="pun">),</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span></pre>
+
+<p>If the extension attempts to use a security origin other than itself,
+say http://www.google.com,
+the browser disallows it
+unless the extension has requested the appropriate cross-origin permissions.
+</p>
+
+<h2 id="requesting-permission">Requesting cross-origin permissions</h2>
+
+<p>By adding hosts or host match patterns (or both) to the
+<a href="manifest.html#permissions">permissions</a> section of the
+<a href="manifest.html">manifest</a> file, the extension can request access to
+remote servers outside of its origin.</p>
+
+<pre class="prettyprint"><span class="pun">{</span><span class="pln">
+  </span><span class="str">"name"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"My extension"</span><span class="pun">,</span><span class="pln">
+  </span><span class="pun">...</span><span class="pln">
+  </span><b><span class="str">"permissions"</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+    </span><span class="str">"http://www.google.com/"</span><span class="pln">
+  </span><span class="pun">]</span></b><span class="pun">,</span><span class="pln">
+  </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>Cross-origin permission values can be fully qualified host names,
+like these:</p>
+
+<ul>
+  <li> "http://www.google.com/" </li>
+  <li> "http://www.gmail.com/" </li>
+</ul>
+
+<p>Or they can be match patterns, like these:</p>
+
+<ul>
+  <li> "http://*.google.com/" </li>
+  <li> "http://*/" </li>
+</ul>
+
+<p>
+A match pattern of "http://*/" allows HTTP access to all reachable domains.
+Note that here,
+match patterns are similar to <a href="match_patterns.html">content script
+match patterns</a>,
+but any path information following the host is ignored.</p>
+
+<p>Also note that access is granted both by host and by scheme. If an extension
+wants both secure and non-secure HTTP access to a given host or set
+of hosts, it must declare the permissions separately:</p>
+
+<pre class="prettyprint"><span class="str">"permissions"</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+  </span><span class="str">"http://www.google.com/"</span><span class="pun">,</span><span class="pln">
+  </span><span class="str">"https://www.google.com/"</span><span class="pln">
+</span><span class="pun">]</span></pre>
+
+<h2 id="security-considerations">Security considerations</h2>
+
+<p>
+When using resources retrieved via XMLHttpRequest, your background page should
+be careful not to fall victim to <a href="http://en.wikipedia.org/wiki/Cross-site_scripting">cross-site
+scripting</a>.  Specifically, avoid using dangerous APIs such as the below:
+</p>
+<pre class="prettyprint"><span class="pln">background</span><span class="pun">.</span><span class="pln">html
+</span><span class="pun">===============</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> xhr </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">"GET"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"http://api.example.com/data.json"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">onreadystatechange </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">.</span><span class="pln">readyState </span><span class="pun">==</span><span class="pln"> </span><span class="lit">4</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// WARNING! Might be evaluating an evil script!</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> resp </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">eval</span><span class="pun">(</span><span class="str">"("</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> xhr</span><span class="pun">.</span><span class="pln">responseText </span><span class="pun">+</span><span class="pln"> </span><span class="str">")"</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span><span class="pln">
+
+background</span><span class="pun">.</span><span class="pln">html
+</span><span class="pun">===============</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> xhr </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">"GET"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"http://api.example.com/data.json"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">onreadystatechange </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">.</span><span class="pln">readyState </span><span class="pun">==</span><span class="pln"> </span><span class="lit">4</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// WARNING! Might be injecting a malicious script!</span><span class="pln">
+    document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">"resp"</span><span class="pun">).</span><span class="pln">innerHTML </span><span class="pun">=</span><span class="pln"> xhr</span><span class="pun">.</span><span class="pln">responseText</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span></pre>
+<p>
+Instead, prefer safer APIs that do not run scripts:
+</p>
+<pre class="prettyprint"><span class="pln">background</span><span class="pun">.</span><span class="pln">html
+</span><span class="pun">===============</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> xhr </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">"GET"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"http://api.example.com/data.json"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">onreadystatechange </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">.</span><span class="pln">readyState </span><span class="pun">==</span><span class="pln"> </span><span class="lit">4</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// JSON.parse does not evaluate the attacker's scripts.</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> resp </span><span class="pun">=</span><span class="pln"> JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">.</span><span class="pln">responseText</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span><span class="pln">
+
+background</span><span class="pun">.</span><span class="pln">html
+</span><span class="pun">===============</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> xhr </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">"GET"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"http://api.example.com/data.json"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">onreadystatechange </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">xhr</span><span class="pun">.</span><span class="pln">readyState </span><span class="pun">==</span><span class="pln"> </span><span class="lit">4</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// innerText does not let the attacker inject HTML elements.</span><span class="pln">
+    document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">"resp"</span><span class="pun">).</span><span class="pln">innerText </span><span class="pun">=</span><span class="pln"> xhr</span><span class="pun">.</span><span class="pln">responseText</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+xhr</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span></pre>
+<p>
+Additionally, be especially careful of resources retrieved via HTTP.  If your
+extension is used on a hostile network, an network attacker (aka a <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">"man-in-the-middle"</a>)
+could modify the response and, potentially, attack your extension.  Instead,
+prefer HTTPS whenever possible.
+</p>
+
+<h3 id="interaction-with-csp">Interaction with Content Security Policy</h3>
+
+<p>
+If you modify the default <a href="contentSecurityPolicy.html">Content
+Security Policy</a> for apps or extensions by adding a
+<code>content_security_policy</code> attribute to your manifest, you'll need to
+ensure that any hosts to which you'd like to connect are allowed. While the
+default policy doesn't restrict connections to hosts, be careful when explicitly
+adding either the <code>connect-src</code> or <code>default-src</code>
+directives.
+</p>
+
+<script src="../content.js"></script>
+    </body>
+</html>
