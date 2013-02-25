@@ -5,8 +5,13 @@
  * @link   http://www.gracecode.com/
  */
 
-div.pubmed-popup {
+.chrome-popup div.pubmed-popup h1.logo,
+div.pubmed-popup .popup-title .close,
+.chrome-popup div.pubmed-popup form button[type=submit]{
+    background: url(dictionary.png) no-repeat scroll -999em -999em;
+}
 
+div.pubmed-popup {
     position: fixed;
     z-index: 99999;
 
@@ -35,13 +40,11 @@ div.pubmed-popup .popup-title .close {
     display: inline-block;
     height: 18px;
     width: 18px;
-    background: red;
     position: absolute;
     right: .5em;
     top: .5em;
     cursor: pointer;
     text-indent: -999em;
-    background: url(dictionary.png) no-repeat scroll -999em -999em;
     background-position: -282px 0px;
 }
 
@@ -94,14 +97,12 @@ div.pubmed-popup .content dl dd {
 
 
 .chrome-popup div.pubmed-popup h1.logo {
-    background: url(dictionary.png) no-repeat scroll -999em -999em;
     background-position: 0px 0px;
-    width: 175px;
-    height: 85px;
+    width: 115px;
+    height: 55px;
     text-indent: -999em;
-    margin: 1em auto;
+    margin: .2em 0;
 }
-
 
 .chrome-popup div.pubmed-popup form {
     overflow: hidden;
@@ -115,7 +116,6 @@ div.pubmed-popup .content dl dd {
 }
 
 .chrome-popup div.pubmed-popup form button[type=submit]{
-    background: url(dictionary.png) no-repeat scroll -999em -999em;
     display: inline-block;
     width: 90px;
     height: 35px;

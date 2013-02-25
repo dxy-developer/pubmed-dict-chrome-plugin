@@ -7,41 +7,47 @@
 
 ~function() {
 
+    function getRequestUrl(word) {
+        var baseUrl = "http://localhost/tmp/dict.json";
+        return baseUrl + "?word=" + encodeURIComponent(word);
+    }
+
     function fetchTranslate(words, callback)
     {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(data) {
             if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
-                //var resp = JSON.parse(xhr.responseText);
-                console.info(xhr.responseText);
+                var resp = JSON.parse(xhr.responseText);
                 callback(
-                    {data: xhr.responseText }
+                    {
+                        _responseText: xhr.responseText,
+                            data: resp
+                    }
                 );
             } else {
-                //callback(null);
+                callback(null);
             }
         }
 
-        var url = "http://fanyi.youdao.com/translate?client=deskdict&keyfrom=chrome.extension&xmlVersion=1.1&dogVersion=1.0&ue=utf8&i="+encodeURIComponent(words)+"&doctype=xml";
-        xhr.open('GET', url, true);
+        console.info('Send request to: ' + getRequestUrl(words));
+        xhr.open('GET', getRequestUrl(words), true);
         xhr.send();	
     }
-
 
     // Bind Message Listener
     chrome.extension.onMessage.addListener(
         function(request, sender, sendResponse) {
-
             console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-            "from the extension");
+                "from a content script:" + sender.tab.url : "from the extension");
 
-            if (request.word == "hello") {
-                //sendResponse({farewell: "goodbye"});
-                console.info('fetch');
-                fetchTranslate('hello', sendResponse);
+            switch(request.command) {
+                case 'search': 
+                    fetchTranslate(request.words, sendResponse);
+                    break;
             }
 
             return true;
     });
+
+    window.fetchTranslate = fetchTranslate;
 }();
