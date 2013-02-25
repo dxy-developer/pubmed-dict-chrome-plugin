@@ -35,6 +35,7 @@
     }
 
     // Bind Message Listener
+    /*
     chrome.extension.onMessage.addListener(
         function(request, sender, sendResponse) {
             console.log(sender.tab ?
@@ -47,6 +48,15 @@
             }
 
             return true;
+    });
+    */
+
+    chrome.extension.onConnect.addListener(function(port) {
+        port.onMessage.addListener(function(msg) {
+            fetchTranslate(msg.words, function(data) {
+                port.postMessage(data);
+            });
+        });
     });
 
     window.fetchTranslate = fetchTranslate;

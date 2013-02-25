@@ -15,10 +15,20 @@
         searchContent = document.getElementById('J_Content'),
         searchWord = document.getElementById('J_Word');
 
-    var formatter = '<h4>{word} <span>({phonetic})</span></h4> <dl> <dt>含义</dt> <dd>{definition}</dd> <dt>例句</dt> <dd>{sentences}</dd> <dl>';
+    var formatter = '<h4>{word} <span>({phonetic})</span></h4> <dl> <dd>{definition}</dd> <dt>例句</dt> <dd>{sentences}</dd> <dl>';
 
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
+    }
+
+    function loadCSS(url) {
+        var head  = document.getElementsByTagName('head')[0];
+        var link  = document.createElement('link');
+            link.rel  = 'stylesheet';
+            link.type = 'text/css';
+            link.href = url;
+            link.media = 'all';
+        head.appendChild(link);
     }
 
     function stopEvent(e) {
@@ -43,10 +53,6 @@
             left = e.clientX + body.scrollLeft - body.clientLeft;
             top = e.clientY + body.scrollTop  - body.clientTop;
         }
-
-        console.info(popupWidth);
-        console.info(left);
-        console.info(body.clientWidth);
 
         if (popupWidth + left > body.clientWidth) {
             left = body.clientWidth - popupWidth * 1.5;
@@ -90,7 +96,7 @@
 
         return {
             word: data.en_word,
-            phonetic: '英['+ data.phonetic.BrE +'] 美['+ data.phonetic.NamE +']',
+            phonetic: '英['+ data.phonetic.BrE +'] 美['+ data.phonetic.NAmE +']',
             sentences: sentences,
             definition: definition
         }
@@ -106,15 +112,20 @@
     }
 
     // inform query
-    if (typeof searchForm != 'undefinded') {
+    var lastRequestWord;
+    if (searchForm) {
         searchForm.addEventListener('submit', function(e) {
             var word = searchWord.value;
             if (isValidWord(word)) {
                 searchContent.innerHTML = "请稍候";
                 searchContent.style.display = 'block';
-                chrome.runtime.getBackgroundPage(function(backgroundPage) {
-                    backgroundPage.fetchTranslate(word, showResponse);
-                });
+
+                if (lastRequestWord != word) {
+                    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+                        backgroundPage.fetchTranslate(word, showResponse);
+                    });
+                    lastRequestWord = word;
+                }
             } else {
                 searchWord.value = "";
                 alert('请输入有效的英文单词');
@@ -122,41 +133,55 @@
             stopEvent(e);
         });
     } else {
-        
-    }
+        popup = document.createElement('div');
+        popup.className = "pubmed-popup";
+        popup.innerHTML = '<div class="popup-title"> 医学英汉词典 <a class="close" id="J_PubMed_PopupClose" title="关闭">Close</a> </div> <div class="content" id="J_Content"></div>';
+        body.appendChild(popup);
+        loadCSS(chrome.extension.getURL("popup.css"));
 
-    /*
-    window.addEventListener("scroll", function(e) {
-        if (popup.style.display != 'none') {
-            popup.style.display = 'none';
-        }
-    });
+        popupClose = document.getElementById('J_PubMed_PopupClose');
+        searchContent = document.getElementById('J_Content');
 
-    body.addEventListener("mouseup", function(e) {
-       var sText = trim((document.selection == undefined) ? 
-            document.getSelection().toString() : document.selection.createRange().text);
-
-        if (isValidWord(sText)) {
-            popup.style.display = 'block';
-            decidePopupPostioin(e);
-
-            console.info(sText);
-        } else {
-            popup.style.display = 'none';
-        }
-
-                //chrome.extension.sendMessage({command:'search', words: word }, showResponse);
-        chrome.extension.sendMessage({ word: "hello" }, function(response) {
-            console.log(response);
+        window.addEventListener("scroll", function(e) {
+            if (popup.style.display != 'none') {
+                popup.style.display = 'none';
+            }
         });
-    }, false);
 
-    popup.addEventListener("mouseup", function(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
-        e.preventDefault();
-        return false;
-    });
-    */
+        var port = chrome.extension.connect({name: "wordRequester"});
+        port.onMessage.addListener(function(msg) {
+            showResponse(msg);
+
+
+
+        });
+        body.addEventListener("mouseup", function(e) {
+           var sText = trim((document.selection == undefined) ? 
+                document.getSelection().toString() : document.selection.createRange().text);
+
+            if (isValidWord(sText)) {
+                requestIsRunning = true;
+                popup.style.display = 'block';
+                decidePopupPostioin(e);
+                if (lastRequestWord != sText) {
+                    //chrome.extension.sendMessage({command:'search', words: sText}, showResponse);
+                    /*
+                    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+                        backgroundPage.fetchTranslate(sText, showResponse);
+                    });
+                    */
+                    port.postMessage({words: sText});
+                    lastRequestWord = sText;
+                }
+            } else {
+                popup.style.display = 'none';
+            }
+
+        }, false);
+
+        popup.addEventListener("mouseup", function(e) {
+            stopEvent(e);
+            return false;
+        });
+    }
 }();
