@@ -3,11 +3,27 @@
     <head>
         <meta charset="utf-8" />
         <title></title>
-        <link rel="stylesheet" type="text/css" href="" />
+        <link rel="stylesheet" type="text/css" href="popup.css" />
     </head>
-    <body>
-        Popup.html
-        
-        http://dict.pubmed.cn/
+    <body class="chrome-popup">
+        <div class="pubmed-popup" id="J_PubMed_Popup">
+            <h1 class="logo">Pubmed</h1>
+            <form action="" method="get">
+                <input type="text" name="words" class="" value="" />
+                <button type="submit">Search</button>
+            </form>
+            
+            <div class="content">
+            <h4>{word} <span>({phonetic})</span></h4>
+            <dl>
+                <dt>含义</dt>
+                <dd>{definition}</dd>
+
+                <dt>例句</dt>
+                <dd>{sentences}</dd>
+            <dl>
+            <a href="http://dict.pubmed.cn/{word}.htm" class="more">详细…</a>
+            </div>
+        </div>
     </body>
 </html>

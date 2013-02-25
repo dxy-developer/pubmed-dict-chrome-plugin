@@ -5,9 +5,7 @@
  * @link   http://www.gracecode.com/
  */
 
-
 div.pubmed-popup {
-    display: none;
 
     position: fixed;
     z-index: 99999;
@@ -43,6 +41,8 @@ div.pubmed-popup .popup-title .close {
     top: .5em;
     cursor: pointer;
     text-indent: -999em;
+    background: url(dictionary.png) no-repeat scroll -999em -999em;
+    background-position: -282px 0px;
 }
 
 div.pubmed-popup .content {
@@ -77,5 +77,55 @@ div.pubmed-popup .content dl dt {
 
 div.pubmed-popup .content dl dd {
     margin: 0;
+}
+
+.chrome-popup {
+    background-color: #eeeff4;
+
+}
+
+.chrome-popup div.pubmed-popup {
+    position: static;
+    border-radius: none;
+    box-shadow: none;
+    border: none;
+    background-color: #eeeff4;
+}
+
+
+.chrome-popup div.pubmed-popup h1.logo {
+    background: url(dictionary.png) no-repeat scroll -999em -999em;
+    background-position: 0px 0px;
+    width: 175px;
+    height: 85px;
+    text-indent: -999em;
+    margin: 1em auto;
+}
+
+
+.chrome-popup div.pubmed-popup form {
+    overflow: hidden;
+}
+
+.chrome-popup div.pubmed-popup form input[type=text]{
+    padding: .5em 1em;
+    width: 200px;
+    display: block;
+
+}
+
+.chrome-popup div.pubmed-popup form button[type=submit]{
+    background: url(dictionary.png) no-repeat scroll -999em -999em;
+    display: inline-block;
+    width: 90px;
+    height: 35px;
+    background-position: 0px -234px;
+    border: 0px;
+    text-indent: -999em;
+}
+
+.chrome-popup div.pubmed-popup .content {
+    display: none;
+    background-color: #eeeff4;
 }
 
