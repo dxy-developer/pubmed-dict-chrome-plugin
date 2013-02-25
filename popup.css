@@ -8,17 +8,15 @@
 .chrome-popup div.pubmed-popup h1.logo,
 div.pubmed-popup .popup-title .close,
 .chrome-popup div.pubmed-popup form button[type=submit]{
-    background: url(dictionary.png) no-repeat scroll -999em -999em;
+    background: url(chrome-extension://gfojaocmjafioggkhneinllpkbpppdhi/dictionary.png) no-repeat scroll -999em -999em;
 }
 
 div.pubmed-popup {
     display: none;
     position: fixed;
     z-index: 99999;
-
     left: 100px;
     top: 100px;
-    
     font-size: 12px;
     border: 3px solid #ccc;
     width: 450px;
@@ -89,9 +87,11 @@ div.pubmed-popup .content dl dd {
 }
 
 .chrome-popup div.pubmed-popup {
+    display: block;
     position: static;
     border-radius: none;
     box-shadow: none;
+    width: 250px;
     border: none;
     background-color: #eeeff4;
 }

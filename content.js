@@ -15,7 +15,8 @@
         searchContent = document.getElementById('J_Content'),
         searchWord = document.getElementById('J_Word');
 
-    var formatter = '<h4>{word} <span>({phonetic})</span></h4> <dl> <dd>{definition}</dd> <dt>例句</dt> <dd>{sentences}</dd> <dl>';
+        var formatter = '<h4>{word} <span>({phonetic})</span></h4> <dl> <dd>{definition}</dd> <dt>例句</dt> <dd>{sentences}</dd> <dl>'+
+            ' <a href="http://dict.pubmed.cn/{word}.htm" class="more">详细…</a>';
 
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
@@ -80,7 +81,7 @@
             for (index in data.sentences) {
                 tmp.push(data.sentences[index].cn + "<br />" + data.sentences[index].en);
             }
-            sentences = tmp.join("<br /></br />");
+            sentences = tmp.join("<br />");
         }
 
         if (data.definition) {
@@ -88,7 +89,7 @@
             for (index in data.definition) {
                 var def = data.definition[index];
                 for (var i in def) {
-                    tmp.push(i + ": " + def[i]);
+                    tmp.push("<b>" + i + "</b><br />" + def[i]);
                 }
             }
             definition = tmp.join("<br />");
@@ -135,7 +136,7 @@
     } else {
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
-        popup.innerHTML = '<div class="popup-title"> 医学英汉词典 <a class="close" id="J_PubMed_PopupClose" title="关闭">Close</a> </div> <div class="content" id="J_Content"></div>';
+        popup.innerHTML = '<div class="popup-title">医学英汉词典</div> <div class="content" id="J_Content"></div>';
         body.appendChild(popup);
         loadCSS(chrome.extension.getURL("popup.css"));
 
