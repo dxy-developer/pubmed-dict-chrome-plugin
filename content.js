@@ -55,8 +55,21 @@
             top = e.clientY + body.scrollTop  - body.clientTop;
         }
 
-        if (popupWidth + left > body.clientWidth) {
-            left = body.clientWidth - popupWidth * 1.5;
+        popup.style.left = left + 'px';
+        popup.style.top  = top + 'px';
+    }
+
+    function decidePopupOffset() {
+        var left = parseInt(popup.style.left), top = parseInt(popup.style.top), 
+            popupWidth = popup.clientWidth,
+            popupHeight = popup.clientHeight;
+
+        if (popupWidth + left > window.innerWidth) {
+            left = window.innerWidth - popupWidth * 1.2;
+        }
+
+        if (popupHeight + top > window.innerHeight) {
+            top = window.innerHeight - popupHeight * 1.1;
         }
 
         popup.style.left = left + 'px';
@@ -153,7 +166,7 @@
         var port = chrome.extension.connect({name: "wordRequester"});
         port.onMessage.addListener(function(msg) {
             showResponse(msg);
-            // ...
+            setTimeout(decidePopupOffset, 200);
         });
         body.addEventListener("mouseup", function(e) {
            var sText = trim((document.selection == undefined) ? 
@@ -164,12 +177,6 @@
                 popup.style.display = 'block';
                 decidePopupPostioin(e);
                 if (lastRequestWord != sText) {
-                    //chrome.extension.sendMessage({command:'search', words: sText}, showResponse);
-                    /*
-                    chrome.runtime.getBackgroundPage(function(backgroundPage) {
-                        backgroundPage.fetchTranslate(sText, showResponse);
-                    });
-                    */
                     port.postMessage({words: sText});
                     lastRequestWord = sText;
                 }
