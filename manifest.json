@@ -1,8 +1,8 @@
 ﻿{
     "manifest_version": 2,
-    "name": "医学英汉词典",
+    "name": "__MSG_extName__",
     "version": "1.0",
-    "description": "丁香园出品的医学英汉词典 Chrome 浏览器插件，支持划词搜索",
+    "description": "__MSG_extDesp__",
     "icons": { "128": "icon-128.png","32":"icon-32.png" },
     "options_page": "options.html",
     "browser_action": {
@@ -25,6 +25,8 @@
         "matches": ["http://*/*", "https://*/*"],
         "js": ["content.js"],
         "css": ["popup.css"]
-    }]
+    }],
+
+    "default_locale": "zh"
 //, "update_url": "http://cidian.youdao.com/chromeplus/update.xml"
 }

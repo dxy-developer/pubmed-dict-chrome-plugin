@@ -104,7 +104,7 @@
     }
 
     function showResponse(response) {
-        var result = '抱歉，没有找到需要的结果';
+        var result = chrome.i18n.getMessage("notfound");
         if (response && response.data) {
             result = formatMessage(formatter, getValidObject(response.data))
         }
@@ -118,7 +118,7 @@
         searchForm.addEventListener('submit', function(e) {
             var word = searchWord.value;
             if (isValidWord(word)) {
-                searchContent.innerHTML = "请稍候";
+                searchContent.innerHTML = chrome.i18n.getMessage("waiting");
                 searchContent.style.display = 'block';
 
                 if (lastRequestWord != word) {
@@ -129,14 +129,15 @@
                 }
             } else {
                 searchWord.value = "";
-                alert('请输入有效的英文单词');
+                alert(chrome.i18n.getMessage("plsInputVaildWord"));
             }
             stopEvent(e);
         });
     } else {
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
-        popup.innerHTML = '<div class="popup-title">医学英汉词典</div> <div class="content" id="J_Content"></div>';
+        popup.innerHTML = '<div class="popup-title">'+ chrome.i18n.getMessage("extName") 
+                                            +'</div> <div class="content" id="J_Content"></div>';
         body.appendChild(popup);
         loadCSS(chrome.extension.getURL("popup.css"));
 
@@ -152,9 +153,7 @@
         var port = chrome.extension.connect({name: "wordRequester"});
         port.onMessage.addListener(function(msg) {
             showResponse(msg);
-
-
-
+            // ...
         });
         body.addEventListener("mouseup", function(e) {
            var sText = trim((document.selection == undefined) ? 

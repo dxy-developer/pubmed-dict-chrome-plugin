@@ -1,0 +1,21 @@
+{
+    "extName": {
+        "message": "医学英汉词典"
+    },
+
+    "extDesp": {
+        "message": "丁香园出品的医学英汉词典 Chrome 浏览器插件，支持划词搜索"
+    },
+
+    "waiting": {
+        "message": "请稍候…"
+    },
+
+    "notfound": {
+        "message": "抱歉，没有找到需要的结果"
+    },
+
+    "plsInputVaildWord": {
+        "message": "请输入有效的英文单词"
+    }
+}
