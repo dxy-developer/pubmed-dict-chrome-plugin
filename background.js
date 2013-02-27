@@ -12,18 +12,46 @@
         return baseUrl + "?word=" + encodeURIComponent(word);
     }
 
+    function isCached(words) {
+        return !!fetchFromCache(words);
+    }
+
+    function fetchFromCache(words) {
+        var keys = '_' + words;
+        return JSON.parse(localStorage.getItem(keys));
+    }
+
+    function saveToCache(words, data) {
+        try {
+            var keys = '_' + words;
+            localStorage.setItem(keys, JSON.stringify(data));
+        } catch (e) {
+            if (e == QUOTA_EXCEEDED_ERR) {
+                //data wasn't successfully saved due to quota exceed so throw an error
+                console.error('Quota exceeded!'); 
+            }
+        }
+    }
+
     function fetchTranslate(words, callback)
     {
+        if (isCached(words)) {
+            // if cache prisented
+            var data = fetchFromCache(words);
+            return callback(data);
+        }
+
+        // send resquest to service
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(data) {
             if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
                 var resp = JSON.parse(xhr.responseText);
-                callback(
-                    {
-                        _responseText: xhr.responseText,
-                            data: resp
-                    }
-                );
+                var data = {
+                    _responseText: xhr.responseText,
+                    data: resp
+                };
+                callback(data);
+                saveToCache(words, data);
             } else {
                 callback(null);
             }
@@ -35,22 +63,6 @@
     }
 
     // Bind Message Listener
-    /*
-    chrome.extension.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            console.log(sender.tab ?
-                "from a content script:" + sender.tab.url : "from the extension");
-
-            switch(request.command) {
-                case 'search': 
-                    fetchTranslate(request.words, sendResponse);
-                    break;
-            }
-
-            return true;
-    });
-    */
-
     chrome.extension.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
             fetchTranslate(msg.words, function(data) {
