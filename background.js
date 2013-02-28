@@ -8,8 +8,8 @@
 ~function() {
 
     function getRequestUrl(word) {
-        var baseUrl = "http://localhost/tmp/dict.json";
-        return baseUrl + "?word=" + encodeURIComponent(word);
+        var baseUrl = 'http://dict.pubmed.cn/webservices/dict/openapi/3223231d'
+        return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
     }
 
     function isCached(words) {
@@ -58,7 +58,7 @@
         }
 
         console.info('Send request to: ' + getRequestUrl(words));
-        xhr.open('GET', getRequestUrl(words), true);
+        xhr.open('GET', getRequestUrl(words.toLowerCase()), true);
         xhr.send();	
     }
 

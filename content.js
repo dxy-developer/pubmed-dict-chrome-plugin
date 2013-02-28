@@ -142,7 +142,7 @@
                 }
             } else {
                 searchWord.value = "";
-                alert(chrome.i18n.getMessage("plsInputVaildWord"));
+                //alert(chrome.i18n.getMessage("plsInputVaildWord"));
             }
             stopEvent(e);
         });
@@ -169,8 +169,14 @@
             setTimeout(decidePopupOffset, 200);
         });
         body.addEventListener("mouseup", function(e) {
+            var nodeName = e.target.nodeName.toLowerCase();
+            if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
+                return;
+            }
+
            var sText = trim((document.selection == undefined) ? 
                 document.getSelection().toString() : document.selection.createRange().text);
+
 
             if (isValidWord(sText)) {
                 requestIsRunning = true;

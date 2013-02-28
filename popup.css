@@ -80,6 +80,8 @@ div.pubmed-popup .content dl dt {
 
 div.pubmed-popup .content dl dd {
     margin: 0;
+    max-height: 250px;
+    overflow: auto;
 }
 
 .chrome-popup {
