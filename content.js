@@ -40,7 +40,7 @@
     }
 
     function isValidWord(word) {
-        var pregMatchWord = new RegExp('^\\w{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
+        var pregMatchWord = new RegExp('^[a-z]{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
         return pregMatchWord.test(word);
     }
 

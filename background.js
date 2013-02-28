@@ -12,6 +12,10 @@
         return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
     }
 
+    function clearCache() {
+        localStorage.clear();
+    }
+
     function isCached(words) {
         return !!fetchFromCache(words);
     }

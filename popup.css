@@ -48,6 +48,7 @@ div.pubmed-popup .popup-title .close {
 }
 
 div.pubmed-popup .content {
+    text-align: left!important;
     padding: 0 .5em .5em .5em;
     background: #fff;
     width: auto;
@@ -120,7 +121,6 @@ div.pubmed-popup .content dl dd {
     padding: .5em 1em;
     width: 200px;
     display: block;
-
 }
 
 .chrome-popup div.pubmed-popup form button[type=submit]{
