@@ -3,9 +3,66 @@
     <head>
         <meta charset="utf-8" />
         <title></title>
-        <link rel="stylesheet" type="text/css" href="" />
+        <link rel="stylesheet" type="text/css" href="reset-min.css" />
+        <style>
+            body {
+                background-color: #eeeff4;
+                font-size: 14px;
+                color: #333;
+            }
+
+            #logo {
+                background: url('dictionary.png') no-repeat scroll -999em -999em;
+                background-position: 0px 0px;
+                width: 115px;
+                height: 55px;
+                text-indent: -999em;
+                margin: .2em 0;
+            }
+
+            #page {
+                width: 500px;
+                margin: 5em auto;
+            }
+
+            #page form {
+                margin: 3em 0;
+            }
+
+            #page form p {
+                margin: .5em 0;
+            }
+            
+            #page form p input[type=checkbox] {
+                margin: 0 .5em 0 0;
+            }
+
+            #page form p span {
+                display: block;
+                color: #999;
+                padding: 0 1em;
+            }
+        </style>
     </head>
     <body>
-        Options!
+        <div id="page">
+            <h1 id="logo">英汉字典</h1>
+
+            <form action="" method="post">
+                <p>
+                <label> <input type="checkbox" checked="checked" />取词总开关</label>
+                <span>取消勾选将暂时禁用取词功能</span>
+                </p>
+                <p>
+                <label> <input type="checkbox" /> 按 Ctrl 取词 </label>
+                <span>只有按 Ctrl 键的同时才会取词</span>
+                </p>
+
+                <p style="margin-top: 2em;">
+                <button id="J_clearCache">清除缓存</button>
+                <span>清除缓存后，所有期前请求的内容都会被重新请求</span>
+                </p>
+            </form>
+        </div>
     </body>
 </html>
