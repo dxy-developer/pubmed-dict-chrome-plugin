@@ -17,5 +17,25 @@
 
     "plsInputVaildWord": {
         "message": "请输入有效的英文单词"
+    },
+
+    "ERROR_UNKNOWN": {
+        "message": "未知错误"
+    },
+
+    "NO_RESULTS": {
+        "message": "抱歉，暂无结果"
+    },
+
+    "APIKEY_ERROR": {
+        "message": "参数错误"
+    },
+
+    "OVER_LIMIT": {
+        "message": "抱歉，超过请求限制"
+    },
+
+    "APIKEY_OR_KEYWORD_NULL": {
+        "message": "参数错误"
     }
 }

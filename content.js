@@ -15,8 +15,8 @@
         searchContent = document.getElementById('J_Content'),
         searchWord = document.getElementById('J_Word');
 
-        var formatter = '<h4>{word} <span>({phonetic})</span></h4> <dl> <dd>{definition}</dd> <dt>例句</dt> <dd>{sentences}</dd> <dl>'+
-            ' <a href="http://dict.pubmed.cn/{word}.htm" class="more">详细…</a>';
+        var formatter = '<h4>{word} <span>{phonetic}</span></h4> <dl> <dd>{definition}</dd> {sentences} <dl>'+
+            ' <a href="http://dict.pubmed.cn/{word}.htm" class="more" target="blank">详细…</a>';
 
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
@@ -107,19 +107,34 @@
             }
             definition = tmp.join("<br />");
         }
+        
+        var phonetic = 
+            (data.phonetic.BrE ? '英['+ data.phonetic.BrE +'] ' : "") + 
+            (data.phonetic.NAmE ? '美['+ data.phonetic.NAmE +'] ' : "");
+
+        if (phonetic.length) {
+            phonetic = '('+phonetic+')';
+        }
+
 
         return {
             word: data.en_word,
-            phonetic: '英['+ data.phonetic.BrE +'] 美['+ data.phonetic.NAmE +']',
-            sentences: sentences,
+            phonetic: phonetic,
+            sentences: sentences ? '<dt>例句</dt> <dd>'+ sentences +'</dd>' : "",
             definition: definition
         }
     }
 
+    // http://qa.linkmed.com.cn/confluence/pages/viewpage.action?pageId=35324223
     function showResponse(response) {
         var result = chrome.i18n.getMessage("notfound");
+
         if (response && response.data) {
-            result = formatMessage(formatter, getValidObject(response.data))
+            if (response.data.ERROR) {
+                result = chrome.i18n.getMessage(response.data.ERROR);
+            } else {
+                result = formatMessage(formatter, getValidObject(response.data))
+            }
         }
 
         searchContent.innerHTML = result;
@@ -129,7 +144,7 @@
     var lastRequestWord;
     if (searchForm) {
         searchForm.addEventListener('submit', function(e) {
-            var word = searchWord.value;
+            var word = searchWord.value.toLowerCase();
             if (isValidWord(word)) {
                 searchContent.innerHTML = chrome.i18n.getMessage("waiting");
                 searchContent.style.display = 'block';
@@ -175,8 +190,7 @@
             }
 
            var sText = trim((document.selection == undefined) ? 
-                document.getSelection().toString() : document.selection.createRange().text);
-
+                document.getSelection().toString() : document.selection.createRange().text).toLowerCase();
 
             if (isValidWord(sText)) {
                 requestIsRunning = true;

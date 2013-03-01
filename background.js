@@ -62,7 +62,7 @@
         }
 
         console.info('Send request to: ' + getRequestUrl(words));
-        xhr.open('GET', getRequestUrl(words.toLowerCase()), true);
+        xhr.open('GET', getRequestUrl(words), true);
         xhr.send();	
     }
 
