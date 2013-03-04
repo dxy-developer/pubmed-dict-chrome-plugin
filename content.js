@@ -7,6 +7,8 @@
 
 ~function() {
     var MIN_WORD_LENGTH = 2, MAX_WORD_LENGTH = 32;
+    var OPT_ENABLE = 'disabled', OPT_CTRL = 'ctrl',
+        OPT_ENABLE_DEFVAL = 'true', OPT_CTRL_DEFVAL = 'false';
 
     var body = document.body,
         popup = document.getElementById('J_PubMed_Popup'),
@@ -15,8 +17,17 @@
         searchContent = document.getElementById('J_Content'),
         searchWord = document.getElementById('J_Word');
 
-        var formatter = '<h4>{word} <span>{phonetic}</span></h4> <dl> <dd>{definition}</dd> {sentences} <dl>'+
+    var formatter = '<h4>{word} <span>{phonetic}</span></h4> <dl> <dd>{definition}</dd> {sentences} <dl>'+
             ' <a href="http://dict.pubmed.cn/{word}.htm" class="more" target="blank">详细…</a>';
+
+    // set default from options.html
+    Option.get(OPT_CTRL, OPT_CTRL_DEFVAL, function(val) {
+        OPT_CTRL_DEFVAL = val;
+    });
+
+    Option.get(OPT_ENABLE, OPT_ENABLE_DEFVAL, function(val) {
+        OPT_ENABLE_DEFVAL = val;
+    });
 
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
@@ -161,7 +172,7 @@
             }
             stopEvent(e);
         });
-    } else {
+    } else if (OPT_ENABLE_DEFVAL == 'true') {
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ chrome.i18n.getMessage("extName") 
@@ -184,6 +195,10 @@
             setTimeout(decidePopupOffset, 200);
         });
         body.addEventListener("mouseup", function(e) {
+            if (OPT_CTRL_DEFVAL == 'true' && !e.metaKey) {
+                return;
+            }
+
             var nodeName = e.target.nodeName.toLowerCase();
             if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
                 return;
@@ -211,4 +226,5 @@
             return false;
         });
     }
+
 }();

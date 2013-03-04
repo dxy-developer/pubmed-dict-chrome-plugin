@@ -23,7 +23,7 @@
 
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["content.js"],
+        "js": ["options.js", "content.js"],
         "css": ["popup.css"]
     }],
 

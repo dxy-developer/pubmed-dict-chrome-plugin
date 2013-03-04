@@ -29,7 +29,7 @@
         
         return {
             clear: function() {
-                localStorage.clear();
+                return localStorage.clear();
             },
 
             isCached: function(words) {
