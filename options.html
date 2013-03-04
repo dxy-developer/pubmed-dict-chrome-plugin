@@ -48,13 +48,13 @@
         <div id="page">
             <h1 id="logo">英汉字典</h1>
 
-            <form action="" method="post">
+            <form action="" method="get">
                 <p>
-                <label> <input type="checkbox" checked="checked" />取词总开关</label>
+                <label> <input id="opt_disabled" type="checkbox" checked="checked" />取词总开关</label>
                 <span>取消勾选将暂时禁用取词功能</span>
                 </p>
                 <p>
-                <label> <input type="checkbox" /> 按 Ctrl 取词 </label>
+                <label> <input id="opt_ctrl" type="checkbox" /> 按 Ctrl 取词 </label>
                 <span>只有按 Ctrl 键的同时才会取词</span>
                 </p>
 
@@ -64,5 +64,6 @@
                 </p>
             </form>
         </div>
+        <script src="options.js"></script>
     </body>
 </html>
