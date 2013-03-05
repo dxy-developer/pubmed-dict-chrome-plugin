@@ -24,7 +24,7 @@ div.pubmed-popup {
     background: #fff;
     border-radius: 3px;
     box-shadow: 3px 3px 15px #999;
-    opacity: .9;
+    opacity: .98;
 }
 
 div.pubmed-popup .popup-title {
@@ -54,9 +54,16 @@ div.pubmed-popup .content {
     width: auto;
 }
 
-div.pubmed-popup .content h4 {
+div.pubmed-popup .content h4,
+div.pubmed-popup .content h5 {
+    font-size: 1.2em;
     margin: .5em 0 0 0;
-    font-weight: normal;
+    font-weight: bold;
+}
+
+div.pubmed-popup .content h5 {
+    font-size: 1em;
+    margin: .5em 0 0 0;
 }
 
 div.pubmed-popup .content h4 span {
@@ -83,6 +90,19 @@ div.pubmed-popup .content dl dd {
     margin: 0;
     max-height: 250px;
     overflow: auto;
+}
+
+div.pubmed-popup .content dl dd p {
+    margin: .2em 0;
+    line-height: 1.5em;
+    text-indent: 1em;
+}
+
+div.pubmed-popup .content dl dd hr {
+    width: 10%;
+    background-color: #ccc;
+    border: 0px;
+    margin: .5em 1em;
 }
 
 .chrome-popup {

@@ -103,9 +103,9 @@
         if (data.sentences) {
             var tmp = [], index;
             for (index in data.sentences) {
-                tmp.push(data.sentences[index].cn + "<br />" + data.sentences[index].en);
+                tmp.push("<p>" + data.sentences[index].cn + "</p><p>" + data.sentences[index].en + "</p>");
             }
-            sentences = tmp.join("<br />");
+            sentences = tmp.join("<hr />");
         }
 
         if (data.definition) {
@@ -113,10 +113,10 @@
             for (index in data.definition) {
                 var def = data.definition[index];
                 for (var i in def) {
-                    tmp.push("<b>" + i + "</b><br />" + def[i]);
+                    tmp.push("<h5>" + i + "</h5><p>" + def[i] + "</p>");
                 }
             }
-            definition = tmp.join("<br />");
+            definition = tmp.join("");
         }
         
         var phonetic = 
