@@ -95,14 +95,14 @@ div.pubmed-popup .content dl dd {
 div.pubmed-popup .content dl dd p {
     margin: .2em 0;
     line-height: 1.5em;
-    text-indent: 1em;
+    text-indent: 0em;
 }
 
 div.pubmed-popup .content dl dd hr {
     width: 10%;
-    background-color: #ccc;
+    background-color: #fff;
     border: 0px;
-    margin: .5em 1em;
+    margin: .3em 0;
 }
 
 .chrome-popup {
@@ -157,3 +157,15 @@ div.pubmed-popup .content dl dd hr {
     background-color: #eeeff4;
 }
 
+.chrome-popup #config {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.chrome-popup #config a:link ,
+.chrome-popup #config a:visited ,
+.chrome-popup #config a {
+    color: #555;
+    outline: none;
+}

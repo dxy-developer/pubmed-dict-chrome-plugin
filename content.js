@@ -172,6 +172,16 @@
             }
             stopEvent(e);
         });
+
+        var configEl = document.getElementById("config");
+        configEl.addEventListener("click", function(e) {
+            chrome.tabs.create({url: "options.html"});
+            stopEvent(e);
+        });
+
+        setTimeout(function() {
+            searchWord.focus();
+        }, 500);
     } else if (OPT_ENABLE_DEFVAL == 'true') {
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
