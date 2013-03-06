@@ -1,7 +1,7 @@
 ﻿{
     "manifest_version": 2,
     "name": "__MSG_extName__",
-    "version": "0.99",
+    "version": "1.0",
     "description": "__MSG_extDesp__",
     "icons": { "128": "icon-128.png","32":"icon-32.png" },
     "options_page": "options.html",
