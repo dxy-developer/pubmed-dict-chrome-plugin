@@ -7,7 +7,6 @@
     <body class="chrome-popup">
         <div class="pubmed-popup" id="J_PubMed_Popup">
             <h1 class="logo">Pubmed</h1>
-            <p id="config"><a href="">选项</a></p> 
             <form action="" method="get" id="J_Form">
                 <input type="text" maxlength="32" name="words" id="J_Word" class="" value="" />
                 <button type="submit">Search</button>
@@ -25,6 +24,10 @@
             <dl>
             <a href="http://dict.pubmed.cn/{word_en}.htm" class="more">详细…</a>
             -->
+            </div>
+            <div class="config-area">
+                <p><label><input type="checkbox" id="opt_disable" />开关取词功能</label></p>
+                <p id="config"><a href="">（更多选项…）</a></p> 
             </div>
         </div>
         <script src="options.js"></script>

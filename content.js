@@ -20,15 +20,6 @@
     var formatter = '<h4>{word} <span>{phonetic}</span></h4> <dl> <dd>{definition}</dd> {sentences} <dl>'+
             ' <a href="http://dict.pubmed.cn/{word}.htm" class="more" target="blank">详细…</a>';
 
-    // set default from options.html
-    Option.get(OPT_CTRL, OPT_CTRL_DEFVAL, function(val) {
-        OPT_CTRL_DEFVAL = val;
-    });
-
-    Option.get(OPT_ENABLE, OPT_ENABLE_DEFVAL, function(val) {
-        OPT_ENABLE_DEFVAL = val;
-    });
-
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
     }
@@ -179,10 +170,22 @@
             stopEvent(e);
         });
 
+        var disabledEl =  document.getElementById("opt_disable");
+        Option.get(OPT_ENABLE, OPT_ENABLE_DEFVAL, function(val) {
+            disabledEl.checked = (val == 'false') ?  false : true;
+        });
+        disabledEl.addEventListener('click', function(e) {
+            var value = disabledEl.checked ? 'true' : 'false';
+            Option.set(OPT_ENABLE, value, function(val) {
+                console.info('[Option]' + OPT_ENABLE + " set value as " + val);
+            });
+        });
+
         setTimeout(function() {
             searchWord.focus();
         }, 500);
-    } else if (OPT_ENABLE_DEFVAL == 'true') {
+    } else {
+
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ chrome.i18n.getMessage("extName") 
@@ -202,9 +205,23 @@
         var port = chrome.extension.connect({name: "wordRequester"});
         port.onMessage.addListener(function(msg) {
             showResponse(msg);
-            setTimeout(decidePopupOffset, 200);
+            setTimeout(decidePopupOffset, 100);
         });
+
         body.addEventListener("mouseup", function(e) {
+            // get default from options.html
+            Option.get(OPT_CTRL, OPT_CTRL_DEFVAL, function(val) {
+                OPT_CTRL_DEFVAL = val;
+            });
+
+            Option.get(OPT_ENABLE, OPT_ENABLE_DEFVAL, function(val) {
+                OPT_ENABLE_DEFVAL = val;
+            });
+
+            if (OPT_ENABLE_DEFVAL == 'false') {
+                return;
+            }
+
             if (OPT_CTRL_DEFVAL == 'true' && !e.metaKey) {
                 return;
             }

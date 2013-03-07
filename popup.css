@@ -131,6 +131,7 @@ div.pubmed-popup .content dl dd hr {
 
 .chrome-popup div.pubmed-popup form {
     overflow: hidden;
+    *zoom: 1;
 }
 
 .chrome-popup div.pubmed-popup .more {
@@ -139,8 +140,10 @@ div.pubmed-popup .content dl dd hr {
 
 .chrome-popup div.pubmed-popup form input[type=text]{
     padding: .5em 1em;
-    width: 200px;
-    display: block;
+    width: 100px;
+    display: inline-block;
+    float: left;
+    outline: none;
 }
 
 .chrome-popup div.pubmed-popup form button[type=submit]{
@@ -150,6 +153,8 @@ div.pubmed-popup .content dl dd hr {
     background-position: 0px -234px;
     border: 0px;
     text-indent: -999em;
+    float: left;
+    margin: 0 2em;
 }
 
 .chrome-popup div.pubmed-popup .content {
@@ -157,15 +162,17 @@ div.pubmed-popup .content dl dd hr {
     background-color: #eeeff4;
 }
 
-.chrome-popup #config {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+.chrome-popup .config-area {
+    padding: 0em;
 }
 
-.chrome-popup #config a:link ,
-.chrome-popup #config a:visited ,
-.chrome-popup #config a {
-    color: #555;
-    outline: none;
+.chrome-popup .config-area p {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
 }
+
+.chrome-popup .config-area p#config {
+    margin: .5em 0;
+}
+
