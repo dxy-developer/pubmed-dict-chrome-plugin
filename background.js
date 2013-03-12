@@ -6,6 +6,11 @@
  */
 
 ~function(cscope) {
+    var isSogouExplorer = false;
+    if (typeof sogouExplorer != 'undefined') {
+        isSogouExplorer = true;
+    }
+
     /**
      * Cacher, cache by localStorage
      */
@@ -76,7 +81,8 @@
     }
 
     // Bind Message Listener
-    chrome.extension.onConnect.addListener(function(port) {
+    var addListener = isSogouExplorer ? sogouExplorer.extension.onConnect.addListener : chrome.extension.onConnect.addListener
+    addListener(function(port) {
         port.onMessage.addListener(function(msg) {
             fetchTranslate(msg.words, function(data) {
                 port.postMessage(data);

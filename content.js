@@ -6,6 +6,11 @@
  */
 
 ~function() {
+    var isSogouExplorer = false;
+    if (typeof sogouExplorer != 'undefined') {
+        isSogouExplorer = true;
+    }
+
     var MIN_WORD_LENGTH = 2, MAX_WORD_LENGTH = 32;
     var OPT_ENABLE = 'disabled', OPT_CTRL = 'ctrl',
         OPT_ENABLE_DEFVAL = 'true', OPT_CTRL_DEFVAL = 'false';
@@ -20,6 +25,27 @@
     var formatter = '<h4>{word} <span>{phonetic}</span></h4> <dl> <dd>{definition}</dd> {sentences} <dl>'+
             ' <a href="http://dict.pubmed.cn/{word}.htm" class="more" target="blank">详细…</a>';
 
+    var getMessage = (function() {
+        var messages = {
+            'notfound': "抱歉，没有找到",
+            'extName': "医学英汉辞典",
+            'waiting': "请稍等…",
+            'default': ''
+        };
+
+        return function(id) {
+            if (isSogouExplorer) {
+                if (typeof messages[id] != 'undefined'){
+                    return messages[id];
+                }
+
+                return messages['default'];
+
+            } else {
+                return chrome.i18n.getMessage(id);
+            }
+        }
+    })();
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
     }
@@ -118,7 +144,6 @@
             phonetic = '('+phonetic+')';
         }
 
-
         return {
             word: data.en_word,
             phonetic: phonetic,
@@ -129,11 +154,12 @@
 
     // http://qa.linkmed.com.cn/confluence/pages/viewpage.action?pageId=35324223
     function showResponse(response) {
-        var result = chrome.i18n.getMessage("notfound");
-
+        var result = getMessage("notfound");
         if (response && response.data) {
             if (response.data.ERROR) {
-                result = chrome.i18n.getMessage(response.data.ERROR);
+                if (!isSogouExplorer) {
+                    result = getMessage(response.data.ERROR);
+                }
             } else {
                 result = formatMessage(formatter, getValidObject(response.data))
             }
@@ -145,28 +171,41 @@
     // inform query
     var lastRequestWord;
     if (searchForm) {
+        if (isSogouExplorer) {
+            Option = sogouExplorer.extension.getBackgroundPage().Option;
+        }
+
         searchForm.addEventListener('submit', function(e) {
             var word = searchWord.value.toLowerCase();
             if (isValidWord(word)) {
-                searchContent.innerHTML = chrome.i18n.getMessage("waiting");
+                searchContent.innerHTML = getMessage("waiting");
                 searchContent.style.display = 'block';
 
                 if (lastRequestWord != word) {
-                    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+                    if (isSogouExplorer) {
+                        var backgroundPage = sogouExplorer.extension.getBackgroundPage();
                         backgroundPage.fetchTranslate(word, showResponse);
-                    });
+                    } else {
+                        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+                            backgroundPage.fetchTranslate(word, showResponse);
+                        });
+                    }
                     lastRequestWord = word;
                 }
             } else {
                 searchWord.value = "";
-                //alert(chrome.i18n.getMessage("plsInputVaildWord"));
             }
             stopEvent(e);
         });
 
         var configEl = document.getElementById("config");
         configEl.addEventListener("click", function(e) {
-            chrome.tabs.create({url: "options.html"});
+            if (isSogouExplorer) {
+                var path = sogouExplorer.extension.getURL("options.html");
+                sogouExplorer.tabs.create({url:path});
+            } else {
+                chrome.tabs.create({url: "options.html"});
+            }
             stopEvent(e);
         });
 
@@ -185,13 +224,14 @@
             searchWord.focus();
         }, 500);
     } else {
-
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
-        popup.innerHTML = '<div class="popup-title">'+ chrome.i18n.getMessage("extName") 
+        popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
                                             +'</div> <div class="content" id="J_Content"></div>';
         body.appendChild(popup);
-        loadCSS(chrome.extension.getURL("popup.css"));
+        if (!isSogouExplorer) {
+            loadCSS(chrome.extension.getURL("popup.css"));
+        }
 
         popupClose = document.getElementById('J_PubMed_PopupClose');
         searchContent = document.getElementById('J_Content');
@@ -202,7 +242,9 @@
             }
         });
 
-        var port = chrome.extension.connect({name: "wordRequester"});
+        var port = (isSogouExplorer) ?
+            sogouExplorer.extension.connect({name: "wordRequester"}) : chrome.extension.connect({name: "wordRequester"});
+
         port.onMessage.addListener(function(msg) {
             showResponse(msg);
             setTimeout(decidePopupOffset, 100);
@@ -253,5 +295,4 @@
             return false;
         });
     }
-
 }();

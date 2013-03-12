@@ -5,10 +5,14 @@
  * @link   http://www.gracecode.com/
  */
 
+body {
+    background: red;
+}
+
 .chrome-popup div.pubmed-popup h1.logo,
 div.pubmed-popup .popup-title .close,
 .chrome-popup div.pubmed-popup form button[type=submit] {
-    background: url('chrome-extension://__MSG_@@extension_id__/dictionary.png') no-repeat scroll -999em -999em;
+    background: url('dictionary.png') no-repeat scroll -999em -999em;
 }
 
 div.pubmed-popup {

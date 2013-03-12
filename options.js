@@ -1,21 +1,49 @@
 ~function(cscope) {
+    var isSogouExplorer = false;
+    if (typeof sogouExplorer != 'undefined') {
+        isSogouExplorer = true;
+    }
+
     var get = (function() {
         return function(key, defVal, callback) {
-            chrome.storage.sync.get(key, function(data) {
-                var value = (data[key]) ? data[key] : defVal;
-                callback(value);
+
+        if (isSogouExplorer) {
+            var value = localStorage.getItem(key);
+            if (!value) {
+            value = defVal;
+            }
+            callback && callback(value);
+        } else {
+
+        chrome.storage.sync.get(key, function(data) {
+            var value = (data[key]) ? data[key] : defVal;
+            callback(value);
             });
+        }
         };
     })();
 
     var getAll = function(callback) {
+        if (isSogouExplorer) return null;
         chrome.storage.sync.get(callback);
     }
 
     var set = function(key, value, callback) {
+
+    
+    if (isSogouExplorer) {
+        localStorage.setItem(key, value);
+        if (callback) {
+            callback(value);
+        }
+
+        } else {
         var data = {};
             data[key] = value;
         chrome.storage.sync.set(data, callback ? callback : function(){});
+
+        }
+
     }
 
     var Option = {
@@ -57,6 +85,5 @@
             }
         });
     }
-
     cscope.Option = Option;
 }(window);
