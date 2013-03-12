@@ -5,10 +5,6 @@
  * @link   http://www.gracecode.com/
  */
 
-body {
-    background: red;
-}
-
 .chrome-popup div.pubmed-popup h1.logo,
 div.pubmed-popup .popup-title .close,
 .chrome-popup div.pubmed-popup form button[type=submit] {

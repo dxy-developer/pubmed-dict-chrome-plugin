@@ -51,44 +51,68 @@
         return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
     }
 
+    var requestIsRunning = false, timer = false;
     function fetchTranslate(words, callback)
     {
+        if (timer) {
+            clearTimeout(timer)
+        }
+
         if (Cacher.isCached(words)) {
             // if cache prisented
+            console.info("Cache words '"+ words +"' hited, get from localStorage.")
             var data = Cacher.fetchFromCache(words);
+            console.info(data);
             return callback(data);
         }
 
-        // send resquest to service
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(data) {
-            if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
-                var resp = JSON.parse(xhr.responseText);
-                var data = {
-                    _responseText: xhr.responseText,
-                    data: resp
-                };
-                callback(data);
-                Cacher.saveToCache(words, data);
-            } else {
-                callback(null);
+        timer = setTimeout(function() {
+            // send resquest to service
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(data) {
+                if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
+                    var resp = JSON.parse(xhr.responseText);
+                    var data = {
+                        _responseText: xhr.responseText,
+                        data: resp
+                    };
+                    callback(data);
+                    Cacher.saveToCache(words, data);
+                } else {
+                    callback(null);
+                }
+                requestIsRunning = false;
             }
-        }
 
-        console.info('[NET] Request from ' + getRequestUrl(words));
-        xhr.open('GET', getRequestUrl(words), true);
-        xhr.send();	
+            console.info('[NET] Request from ' + getRequestUrl(words));
+            xhr.open('GET', getRequestUrl(words), true);
+            requestIsRunning = true;
+            xhr.send();
+        }, 30);
     }
 
     // Bind Message Listener
-    var addListener = isSogouExplorer ? sogouExplorer.extension.onConnect.addListener : chrome.extension.onConnect.addListener
-    addListener(function(port) {
-        port.onMessage.addListener(function(msg) {
-            fetchTranslate(msg.words, function(data) {
-                port.postMessage(data);
+    console.info('AddListener is started.');
+    if (!isSogouExplorer) {
+        chrome.extension.onConnect.addListener(function(port) {
+            console.info('AddListener is started.');
+            port.onMessage.addListener(function(msg) {
+                console.info('Recived message ' + msg.words);
+                fetchTranslate(msg.words, function(data) {
+                    port.postMessage(data);
+                });
             });
         });
-    });
+    } else {
+        sogouExplorer.extension.onRequest.addListener(
+            function(request, sender, sendResponse) {
+                console.info('Recived message ' + request.words);
+                if (request.command == "searchWords") {
+                    fetchTranslate(request.words, sendResponse);
+                }
+            }
+        )
+    }
 
     // Bind to global cscope
     cscope.fetchTranslate = fetchTranslate;

@@ -27,8 +27,13 @@
 
     var getMessage = (function() {
         var messages = {
-            'notfound': "抱歉，没有找到",
+            "APIKEY_ERROR": "参数错误",
+            "APIKEY_OR_KEYWORD_NULL": "参数错误",
+            "ERROR_UNKNOWN": "未知错误",
+            "NO_RESULTS": "抱歉，暂无结果",
+            "OVER_LIMIT": "抱歉，超过请求限制",
             'extName': "医学英汉辞典",
+            'notfound': "抱歉，没有找到",
             'waiting': "请稍等…",
             'default': ''
         };
@@ -157,9 +162,7 @@
         var result = getMessage("notfound");
         if (response && response.data) {
             if (response.data.ERROR) {
-                if (!isSogouExplorer) {
-                    result = getMessage(response.data.ERROR);
-                }
+                result = getMessage(response.data.ERROR);
             } else {
                 result = formatMessage(formatter, getValidObject(response.data))
             }
@@ -170,6 +173,7 @@
 
     // inform query
     var lastRequestWord;
+
     if (searchForm) {
         if (isSogouExplorer) {
             Option = sogouExplorer.extension.getBackgroundPage().Option;
@@ -242,15 +246,19 @@
             }
         });
 
-        var port = (isSogouExplorer) ?
-            sogouExplorer.extension.connect({name: "wordRequester"}) : chrome.extension.connect({name: "wordRequester"});
+        var port = null;
+        var onFinished = function(response) {
+            console.info(response);
+            showResponse(response);
+            setTimeout(decidePopupOffset, 50);
+        }
 
-        port.onMessage.addListener(function(msg) {
-            showResponse(msg);
-            setTimeout(decidePopupOffset, 100);
-        });
+        if (!isSogouExplorer) {
+            port = chrome.extension.connect({name: "wordRequester"});
+            port.onMessage.addListener(onFinished);
+        }
 
-        body.addEventListener("mouseup", function(e) {
+        var handler = function(e) {
             // get default from options.html
             Option.get(OPT_CTRL, OPT_CTRL_DEFVAL, function(val) {
                 OPT_CTRL_DEFVAL = val;
@@ -277,18 +285,25 @@
                 document.getSelection().toString() : document.selection.createRange().text).toLowerCase();
 
             if (isValidWord(sText)) {
-                requestIsRunning = true;
                 popup.style.display = 'block';
                 decidePopupPostioin(e);
+
                 if (lastRequestWord != sText) {
-                    port.postMessage({words: sText});
+                    console.info('Post message: ' + sText);
+                    if (!isSogouExplorer) {
+                        port.postMessage({words: sText});
+                    } else {
+                        sogouExplorer.extension.sendRequest({
+                            command: "searchWords", words: sText
+                        }, onFinished);
+                    }
                     lastRequestWord = sText;
                 }
             } else {
                 popup.style.display = 'none';
             }
-
-        }, false);
+        };
+        body.addEventListener("mouseup", handler, false);
 
         popup.addEventListener("mouseup", function(e) {
             stopEvent(e);
