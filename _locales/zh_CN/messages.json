@@ -8,7 +8,7 @@
     },
 
     "waiting": {
-        "message": "请稍候…"
+        "message": "查询中，请稍等..."
     },
 
     "notfound": {
