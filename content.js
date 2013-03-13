@@ -52,6 +52,14 @@
         }
     })();
 
+    function isIframe() {
+        if (top === self) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
     }
