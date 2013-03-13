@@ -11,6 +11,7 @@
 }
 
 div.pubmed-popup {
+    display: none;
     position: fixed;
     z-index: 99999;
     left: 100px;
@@ -30,7 +31,7 @@ div.pubmed-popup .popup-title {
     padding: .5em;
     color: #fff;
     position: relative;
-    cursor: move;
+    cursor: default;
 }
 
 div.pubmed-popup .popup-title .close {

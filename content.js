@@ -164,13 +164,15 @@
 
     // http://qa.linkmed.com.cn/confluence/pages/viewpage.action?pageId=35324223
     function showResponse(response) {
-        var result = getMessage("notfound");
+        var result = "";
         if (response && response.data) {
             if (response.data.ERROR) {
                 result = getMessage(response.data.ERROR);
             } else {
                 result = formatMessage(formatter, getValidObject(response.data))
             }
+        } else {
+            result = getMessage("notfound");
         }
 
         searchContent.innerHTML = result;
@@ -242,7 +244,8 @@
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
-                                            +'</div> <div class="content" id="J_Content"></div>';
+                                            + '<a class="close" id="J_PubMed_PopupClose" title="关闭">Close</a>'
+                                            + '</div> <div class="content" id="J_Content"></div>';
         body.appendChild(popup);
         if (!isSogouExplorer) {
             loadCSS(chrome.extension.getURL("popup.css"));
@@ -251,11 +254,20 @@
         popupClose = document.getElementById('J_PubMed_PopupClose');
         searchContent = document.getElementById('J_Content');
 
-        window.addEventListener("scroll", function(e) {
+        function hidePopup() {
             if (popup.style.display != 'none') {
                 popup.style.display = 'none';
                 searchContent.innerHTML = '';
             }
+        }
+
+        window.addEventListener("scroll", function(e) {
+            hidePopup();
+        });
+
+        popupClose.addEventListener("click", function(e){
+            hidePopup();
+            stopEvent(e);
         });
 
         var port = null;
