@@ -12,8 +12,8 @@
     }
 
     var MIN_WORD_LENGTH = 2, MAX_WORD_LENGTH = 32;
-    var OPT_ENABLE = 'disabled', OPT_CTRL = 'ctrl',
-        OPT_ENABLE_DEFVAL = 'true', OPT_CTRL_DEFVAL = 'false';
+    var OPT_ENABLE = 'disabled', OPT_CTRL = 'ctrl', OPT_ENABLE_SENTENCES = 'sentences',
+        OPT_ENABLE_DEFVAL = 'true', OPT_CTRL_DEFVAL = 'false', OPT_SENTENCES_DEFVAL = 'true';
 
     var body = document.body,
         popup = document.getElementById('J_PubMed_Popup'),
@@ -51,6 +51,7 @@
             }
         }
     })();
+
     function trim(s) {
         return s.replace(/(^\s*)|(\s*$)/g, ""); 
     }
@@ -122,7 +123,11 @@
     var getValidObject = function(data) {
         var definition = "", sentences = "";
 
-        if (data.sentences) {
+        Option.get(OPT_ENABLE_SENTENCES, OPT_SENTENCES_DEFVAL, function(val) {
+            OPT_SENTENCES_DEFVAL = val;
+        });
+
+        if (data.sentences && OPT_SENTENCES_DEFVAL != 'false') {
             var tmp = [], index;
             for (index in data.sentences) {
                 tmp.push("<p>" + data.sentences[index].cn + "</p><p>" + data.sentences[index].en + "</p>");
@@ -172,7 +177,7 @@
     }
 
     // inform query
-    var lastRequestWord;
+    var lastRequestWord, timer;
 
     if (searchForm) {
         if (isSogouExplorer) {
@@ -228,6 +233,12 @@
             searchWord.focus();
         }, 500);
     } else {
+
+        // fetch the default.
+        Option.get(OPT_ENABLE_SENTENCES, OPT_SENTENCES_DEFVAL, function(val) {
+            OPT_SENTENCES_DEFVAL = val;
+        });
+ 
         popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
@@ -243,6 +254,7 @@
         window.addEventListener("scroll", function(e) {
             if (popup.style.display != 'none') {
                 popup.style.display = 'none';
+                searchContent.innerHTML = '';
             }
         });
 
@@ -272,9 +284,11 @@
                 return;
             }
 
+            /*
             if (OPT_CTRL_DEFVAL == 'true' && !e.metaKey) {
                 return;
             }
+            */
 
             var nodeName = e.target.nodeName.toLowerCase();
             if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
@@ -285,20 +299,26 @@
                 document.getSelection().toString() : document.selection.createRange().text).toLowerCase();
 
             if (isValidWord(sText)) {
+                searchContent.innerHTML = getMessage('waiting');
                 popup.style.display = 'block';
                 decidePopupPostioin(e);
 
-                if (lastRequestWord != sText) {
-                    console.info('Post message: ' + sText);
-                    if (!isSogouExplorer) {
-                        port.postMessage({words: sText});
-                    } else {
-                        sogouExplorer.extension.sendRequest({
-                            command: "searchWords", words: sText
-                        }, onFinished);
-                    }
-                    lastRequestWord = sText;
+                if (timer) {
+                    clearTimeout(timer);
                 }
+                timer = setTimeout(function() {
+                    if (lastRequestWord != sText) {
+                        console.info('Post message: ' + sText);
+                        if (!isSogouExplorer) {
+                            port.postMessage({words: sText});
+                        } else {
+                            sogouExplorer.extension.sendRequest({
+                                command: "searchWords", words: sText
+                            }, onFinished);
+                        }
+                        lastRequestWord = sText;
+                    }
+                }, 20);
             } else {
                 popup.style.display = 'none';
             }
