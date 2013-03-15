@@ -200,7 +200,7 @@
                 searchContent.innerHTML = getMessage("waiting");
                 searchContent.style.display = 'block';
 
-                if (lastRequestWord != word) {
+                if (true || lastRequestWord != word) {
                     if (isSogouExplorer) {
                         var backgroundPage = sogouExplorer.extension.getBackgroundPage();
                         backgroundPage.fetchTranslate(word, showResponse);
@@ -327,8 +327,7 @@
                     clearTimeout(timer);
                 }
                 timer = setTimeout(function() {
-                    if (lastRequestWord != sText) {
-                        console.info('Post message: ' + sText);
+                    if (true || lastRequestWord != sText) {
                         if (!isSogouExplorer) {
                             port.postMessage({words: sText});
                         } else {
@@ -338,7 +337,7 @@
                         }
                         lastRequestWord = sText;
                     }
-                }, 20);
+                }, 0);
             } else {
                 popup.style.display = 'none';
             }
