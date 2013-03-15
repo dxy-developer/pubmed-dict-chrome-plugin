@@ -11,7 +11,7 @@
         isSogouExplorer = true;
     }
 
-    var MIN_WORD_LENGTH = 2, MAX_WORD_LENGTH = 32;
+    var MIN_WORD_LENGTH = 2, MAX_WORD_LENGTH = 48;
     var OPT_ENABLE = 'disabled', OPT_CTRL = 'ctrl', OPT_ENABLE_SENTENCES = 'sentences',
         OPT_ENABLE_DEFVAL = 'true', OPT_CTRL_DEFVAL = 'false', OPT_SENTENCES_DEFVAL = 'true';
 
@@ -82,7 +82,7 @@
     }
 
     function isValidWord(word) {
-        var pregMatchWord = new RegExp('^[a-z|\s|\-]{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
+        var pregMatchWord = new RegExp('^[a-z|\ |\-]{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
         return pregMatchWord.test(word);
     }
 
