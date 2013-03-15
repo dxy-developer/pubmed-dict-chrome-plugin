@@ -54,10 +54,6 @@
     var requestIsRunning = false, timer = false;
     function fetchTranslate(words, callback)
     {
-        if (timer) {
-            clearTimeout(timer)
-        }
-
         if (Cacher.isCached(words)) {
             // if cache prisented
             console.info("Cache words '"+ words +"' hited, get from localStorage.")
@@ -66,6 +62,9 @@
             return callback(data);
         }
 
+        if (timer) {
+            clearTimeout(timer)
+        }
         timer = setTimeout(function() {
             // send resquest to service
             var xhr = new XMLHttpRequest();
@@ -88,7 +87,7 @@
             xhr.open('GET', getRequestUrl(words), true);
             requestIsRunning = true;
             xhr.send();
-        }, 30);
+        }, 0);
     }
 
     // Bind Message Listener
