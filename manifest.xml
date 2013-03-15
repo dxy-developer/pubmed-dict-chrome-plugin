@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <extension> 
     <id>cn.dxy.pubmed.dict</id> 
-    <name>医学英汉词典</name> 
+    <name>丁香园医学英汉词典</name> 
     <author>丁香园</author>
     <show_icon>true</show_icon> 
     <description>收录百万医学词汇，支持划词翻译，提供论文例句</description> 
