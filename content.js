@@ -82,7 +82,7 @@
     }
 
     function isValidWord(word) {
-        var pregMatchWord = new RegExp('^[a-z]{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
+        var pregMatchWord = new RegExp('^[a-z|\s|\-]{' + MIN_WORD_LENGTH + ',' + MAX_WORD_LENGTH +'}$');
         return pregMatchWord.test(word);
     }
 
@@ -280,7 +280,7 @@
 
         var port = null;
         var onFinished = function(response) {
-            console.info(response);
+            //console.info(response);
             showResponse(response);
             setTimeout(decidePopupOffset, 50);
         }
