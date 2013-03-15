@@ -180,7 +180,7 @@
                 result = formatMessage(formatter, getValidObject(response.data))
             }
         } else {
-            result = getMessage("notfound");
+            //result = getMessage("notfound");
         }
 
         searchContent.innerHTML = result;
@@ -263,10 +263,8 @@
         searchContent = document.getElementById('J_Content');
 
         function hidePopup() {
-            if (popup.style.display != 'none') {
-                popup.style.display = 'none';
-                searchContent.innerHTML = '';
-            }
+            popup.style.display = 'none';
+            searchContent.innerHTML = '';
         }
 
         window.addEventListener("scroll", function(e) {
