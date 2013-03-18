@@ -30,7 +30,7 @@
 
     "content_scripts": [{
         "matches": ["http://*/*"],
-        "js": ["options.js", "content.js"],
+        "js": ["libs/underscore.min.js", "options.js", "fetcher.js", "popup.js", "content.js"],
         "css": ["popup.css"]
     }]
 }

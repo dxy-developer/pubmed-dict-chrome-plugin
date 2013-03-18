@@ -9,12 +9,10 @@
         var defConfig = {
             clsClose: '.close',
             clsContent: '.pubmed-content',
-            position: 'right',
-            autoFit: true,
             enableMouseover: true,
             enableSelect: true,
             delay: 1000, // ms
-            onFetchWord: function() {},
+            onFetchWord: null,
             onShow: null,
             onHide: null,
             onMove: null
@@ -64,7 +62,6 @@
         function trim(s) {
             return s.replace(/(^\s*)|(\s*$)/g, ""); 
         }
-
 
         var inElement = function(needle, stack) {
             var parentNode = needle.parentNode;

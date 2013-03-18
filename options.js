@@ -5,22 +5,22 @@
     }
 
     var get = (function() {
+
+
         return function(key, defVal, callback) {
-
-        if (isSogouExplorer) {
-            var value = localStorage.getItem(key);
-            if (!value) {
-            value = defVal;
+            if (isSogouExplorer) {
+                var value = localStorage.getItem(key);
+                if (!value) {
+                    value = defVal;
+                }
+                return callback && callback(value);
             }
-            callback && callback(value);
-        } else {
 
-        chrome.storage.sync.get(key, function(data) {
-            var value = (data[key]) ? data[key] : defVal;
-            callback(value);
+            chrome.storage.sync.get(key, function(data) {
+                var value = (data[key]) ? data[key] : defVal;
+                callback(value);
             });
         }
-        };
     })();
 
     var getAll = function(callback) {
@@ -29,21 +29,17 @@
     }
 
     var set = function(key, value, callback) {
-
-    
-    if (isSogouExplorer) {
-        localStorage.setItem(key, value);
-        if (callback) {
-            callback(value);
-        }
+        if (isSogouExplorer) {
+            localStorage.setItem(key, value);
+            if (callback) {
+                callback(value);
+            }
 
         } else {
-        var data = {};
+            var data = {};
             data[key] = value;
-        chrome.storage.sync.set(data, callback ? callback : function(){});
-
+            chrome.storage.sync.set(data, callback ? callback : function(){});
         }
-
     }
 
     var Option = {
