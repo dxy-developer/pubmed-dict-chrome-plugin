@@ -3,7 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <title></title>
-        <link rel="stylesheet" type="text/css" href="../reset-min.css" />
         <link rel="stylesheet" type="text/css" href="../popup.css" />
     </head>
     <body>
@@ -11,7 +10,7 @@
 
         <div class="pubmed-popup" id="J_PubMed_Popup">
             <div class="popup-title"> 医学英汉词典 <a class="close" id="J_PubMed_PopupClose" title="关闭">Close</a> </div>
-            <div class="content">
+            <div class="pubmed-content">
             <h4>{word} <span>({phonetic})</span></h4>
             <dl>
                 <dt>含义</dt>
@@ -23,9 +22,6 @@
             <a href="http://dict.pubmed.cn/{word}.htm" class="more">详细…</a>
             </div>
         </div>
-
-
-
 
 <h1 class="page_title">Cross-Origin XMLHttpRequest</h1>
 
@@ -186,6 +182,34 @@ adding either the <code>connect-src</code> or <code>default-src</code>
 directives.
 </p>
 
-<script src="../content.js"></script>
+<script src="../libs/underscore.min.js"></script>
+<!--
+<script src="../libs/underscore.string.min.js"></script>
+-->
+<script src="../popup.js"></script>
+<script>
+
+    /*
+    document.addEventListener('DOMContentLoaded', function () {
+        });
+     */
+
+    var popup = new Popup(document.getElementById("J_PubMed_Popup"), {
+        onShow: function(e) {
+            // console.info(e);
+        },
+
+        onHide: function(e) {
+            // this.popupContent.innerHTML = "";
+        },
+
+        onFetchWord: function(word) {
+            console.info(word);
+        }
+    });
+
+
+</script>
+
     </body>
 </html>

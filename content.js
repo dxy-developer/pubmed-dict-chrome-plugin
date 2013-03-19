@@ -117,9 +117,11 @@
 
     var update = function() {
         fetcherHandle.updateOptions();
+        popupHandler.hide();
     }
 
-    window.addEventListener("focus", update);
-    window.addEventListener("blue",  update);
+    update();
+    window.addEventListener("focus", update, false);
+    window.addEventListener("blue",  update, false);
 } ();
 
