@@ -5,9 +5,11 @@
  * @link   http://www.gracecode.com/
  */
 
+/*
 z {
     outline: 1px solid red;
 }
+*/
 
 .chrome-popup div.pubmed-popup h1.logo,
 .chrome-popup div.pubmed-popup form button[type=submit] {
@@ -114,7 +116,6 @@ div.pubmed-popup .pubmed-content dl dd hr {
 
 .chrome-popup {
     background-color: #eeeff4;
-
 }
 
 .chrome-popup div.pubmed-popup {
@@ -165,7 +166,6 @@ div.pubmed-popup .pubmed-content dl dd hr {
 }
 
 .chrome-popup div.pubmed-popup .pubmed-content {
-    display: none;
     background-color: #eeeff4;
 }
 

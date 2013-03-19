@@ -11,8 +11,7 @@
                 <input type="text" maxlength="32" name="words" id="J_Word" class="" value="" />
                 <button type="submit">Search</button>
             </form>
-            
-            <div class="content" id="J_Content">
+            <div class="pubmed-content" id="J_Content">
             <!--
             <h4>{word_en} <span>({phonetic})</span></h4>
             <dl>
@@ -26,16 +25,15 @@
             -->
             </div>
             <div class="config-area">
-                <p><label><input type="checkbox" id="opt_disable" />划译</label></p>
-                <!--
-                <p><label><input type="checkbox" id="opt_disable" />取词</label></p> 
-                -->
+                <p><label><input type="checkbox" id="opt_select" />划译</label></p>
+                <p><label><input type="checkbox" id="opt_hover" />取词</label></p> 
                 <p id="config"><a href="">（更多…）</a></p> 
             </div>
         </div>
+        <script src="libs/underscore.min.js"></script>
+        <script src="common.js"></script>
         <script src="options.js"></script>
+        <script src="fetcher.js"></script>
         <script src="search.js"></script>
-        <script>
-        </script>
     </body>
 </html>

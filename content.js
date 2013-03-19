@@ -25,33 +25,6 @@
         head.appendChild(link);
     }
 
-    var getMessage = (function() {
-        var messages = {
-            "APIKEY_ERROR": "参数错误",
-            "APIKEY_OR_KEYWORD_NULL": "参数错误",
-            "ERROR_UNKNOWN": "未知错误",
-            "NO_RESULTS": "抱歉，暂无结果",
-            "OVER_LIMIT": "抱歉，超过请求限制",
-            'extName': "医学英汉辞典",
-            'notfound': "抱歉，没有找到",
-            'waiting': "请稍等…",
-            'default': ''
-        };
-
-        return function(id) {
-            if (isSogouExplorer) {
-                if (typeof messages[id] != 'undefined') {
-                    return messages[id];
-                }
-
-                return messages['default'];
-
-            } else {
-                return chrome.i18n.getMessage(id);
-            }
-        }
-    })();
-
    var popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")

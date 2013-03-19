@@ -12,7 +12,11 @@
     <content_scripts> 
         <content_script runat="document_complete" core_type="webkit">
             <match>http://*/*</match> 
+            <js>libs/underscore.min.js</js> 
+            <js>common.js</js> 
             <js>options.js</js> 
+            <js>fetcher.js</js> 
+            <js>popup.js</js> 
             <js>content.js</js> 
             <css>popup.css</css> 
         </content_script> 
