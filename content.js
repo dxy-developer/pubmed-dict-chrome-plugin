@@ -25,7 +25,6 @@
         head.appendChild(link);
     }
 
-
     var getMessage = (function() {
         var messages = {
             "APIKEY_ERROR": "参数错误",
@@ -67,7 +66,7 @@
     var popupHandler = new Popup(popup, {
         onShow: function(e) {
             if (this.popupContent) {
-                this.popupContent.innerHTML = getMessage("");
+                this.popupContent.innerHTML = getMessage("waiting");
             }
 
             // Update the Options at showtime!
@@ -90,7 +89,7 @@
         onFinished: function(response) {
             var html = fetcherHandle.getResponseHTML(response);
             popupHandler.popupContent.innerHTML = (html.length > 0) ? html : getMessage("notfound");
-
+            popupHandler.decidePopupOffset();
         },
 
         onOptionsUpdated: function(config) {

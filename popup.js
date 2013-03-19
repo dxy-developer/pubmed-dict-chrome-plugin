@@ -44,22 +44,14 @@
             }
         }
 
-
-        /**
-         *
-         */
-        function stopEvent(e) {
+        var stopEvent = function(e) {
             if (e.stopPropagation) {
                 e.stopPropagation();
             }
             e.preventDefault();
         }
 
-
-        /**
-         *
-         */
-        function trim(s) {
+        var trim = function(s) {
             return s.replace(/(^\s*)|(\s*$)/g, ""); 
         }
 
@@ -225,6 +217,7 @@
 
         handle = _.extend(handle, {
             config: config,
+            decidePopupOffset: decidePopupOffset,
             popupContent: popup.querySelector(config.clsContent),
             setEnableSelect: function(flag) {
                 config.enableSelect = !!flag;
