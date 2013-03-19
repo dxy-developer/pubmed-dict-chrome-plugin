@@ -26,20 +26,19 @@
         }
 
         var defOptions = {
-            'disabled': 'false',
+            'select': 'true',
+            'hover': 'true',
             'sentences': 'true',
-            'metaKey': 'false',
-            'hover': 'false'
+            'ctrl': 'false'
         };
 
         // fetch the default.
-        var updateOptions = function() {
-            console.info(defOptions);
-
+        var updateOptions = function(callback) {
             _.each(defOptions, function(value, key, list) {
-                Option.get(key, value, call(function(val) {
-                    defOptions[key] = val ? val : value;
-                }, handle));
+                Option.get(key, value, function(v) {
+                    defOptions[key] = v ? v : value;
+                    callback ? callback() : null;
+                });
             });
         };
  
@@ -133,10 +132,11 @@
                 port.postMessage({words: word});
             },
             updateOptions: function() {
-                updateOptions();
+                var callback = function() {}
                 if (config.onOptionsUpdated) {
-                    call(config.onOptionsUpdated, handle, defOptions)();
+                    callback = call(config.onOptionsUpdated, handle, defOptions);
                 }
+                updateOptions(callback);
             },
             config: config
         });

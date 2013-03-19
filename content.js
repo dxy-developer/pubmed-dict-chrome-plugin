@@ -63,6 +63,8 @@
         loadCSS(chrome.extension.getURL("popup.css"));
     }
 
+    // --
+
     var popupHandler = new Popup(popup, {
         onShow: function(e) {
             if (this.popupContent) {
@@ -93,7 +95,19 @@
         },
 
         onOptionsUpdated: function(config) {
-            //console.info(config);
+            if (config['select'] == 'false') {
+                console.log('Select fetch word is disabled.');
+                popupHandler.disableSelectEvent = true;
+            } else {
+                popupHandler.disableSelectEvent = false;
+            }
+
+            if (config['hover'] == 'false') {
+                console.log('Hover fetch word is disabled.');
+                popupHandler.disableMouseoverEvent = true;
+            } else {
+                popupHandler.disableMouseoverEvent = false;
+            }
         }, 
 
         onError: function(error) {
@@ -101,6 +115,11 @@
         }
     });
 
+    var update = function() {
+        fetcherHandle.updateOptions();
+    }
 
+    window.addEventListener("focus", update);
+    window.addEventListener("blue",  update);
 } ();
 

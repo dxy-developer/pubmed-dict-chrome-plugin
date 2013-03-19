@@ -46,7 +46,7 @@
         get: get, getAll: getAll, set: set
     }
 
-    var opts = [{'key': 'disabled', 'def': 'true'}, {'key': 'ctrl', 'def': 'false'}, {'key': 'sentences', 'def': 'true'}],
+    var opts = [{'key': 'select', 'def': 'true'}, {'key': 'hover', 'def': 'true'}, {'key': 'ctrl', 'def': 'false'}, {'key': 'sentences', 'def': 'true'}],
         eleOpts = [];
     for(index in opts) {
         var key = opts[index].key, id = 'opt_' + key;

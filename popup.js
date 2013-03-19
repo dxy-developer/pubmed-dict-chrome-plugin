@@ -19,6 +19,8 @@
         }; 
         var handle = {
             popup: popup,
+            disableSelectEvent: false,
+            disableMouseoverEvent: false,
             decidePopupOffset: decidePopupOffset,
             decidePopupPostioin: decidePopupPostioin
         }, body = document.body;
@@ -113,6 +115,10 @@
         var mouseupTrigger = function(e){
             var nodeName = e.target.nodeName.toLowerCase();
 
+            if (handle.disableSelectEvent) {
+                return;
+            }
+
             if (inElement(e.target, popup)) {
                 return;
             }
@@ -142,6 +148,10 @@
         var mouseoverTrigger = function(e) {
             var target = e.target, nodeName = e.target.nodeName.toLowerCase();
 
+            if (handle.disableMouseoverEvent) {
+                return;
+            }
+
             if (inElement(target, popup)) {
                 return;
             }
@@ -161,7 +171,7 @@
                 if (hoverY == e.pageY && hoverX == e.pageX) {
                     invadeNodes(e);
                 }
-            }, handler), config.delay);
+            }, handle), config.delay);
 
             stopEvent(e);
         };
