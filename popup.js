@@ -26,7 +26,7 @@
         }, body = document.body;
 
         // Regexp for test words
-        var rHasWord = /\b[a-z]+([-'][a-z]+)*\b/i, 
+        var rHasWord = /\b[a-z]+([-' ][a-z]+)*\b/i, 
             rAllWord = /\b[a-z]+([-'][a-z]+)*\b/gmi, 
             rSingleWord = /^[a-z]+([-'][a-z]+)*$/i;
 
@@ -110,7 +110,7 @@
 
 
         /**
-         *
+         * 选择取词
          */
         var mouseupTrigger = function(e){
             var nodeName = e.target.nodeName.toLowerCase();
@@ -130,7 +130,8 @@
             var sText = (document.selection == undefined) ?  
                             document.getSelection().toString() : document.selection.createRange().text;
 
-            if (trim(sText).length > 0 && rSingleWord.test(sText)) {
+            if (trim(sText).length > 0 && rHasWord.test(sText)) {
+                console.logo("Selected word is " + sText + ".");
                 if (config.onFetchWord) {
                     call(config.onFetchWord, handle, sText)();
                 }
