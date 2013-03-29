@@ -27,7 +27,7 @@
 
         var defOptions = {
             'select': 'true',
-            'hover': 'true',
+            'hover': 'false',
             'sentences': 'true',
             'ctrl': 'false'
         };

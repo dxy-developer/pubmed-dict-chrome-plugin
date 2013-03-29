@@ -26,7 +26,7 @@
         }, body = document.body;
 
         // Regexp for test words
-        var rHasWord = /\b[a-z]+([-' ][a-z]+)*\b/i, 
+        var rHasWord = /\b[a-z]+([-'\ ][a-z]+)*\b/i, 
             rAllWord = /\b[a-z]+([-'][a-z]+)*\b/gmi, 
             rSingleWord = /^[a-z]+([-'][a-z]+)*$/i;
 
@@ -131,7 +131,7 @@
                             document.getSelection().toString() : document.selection.createRange().text;
 
             if (trim(sText).length > 0 && rHasWord.test(sText)) {
-                console.logo("Selected word is " + sText + ".");
+                console.log("Selected word is " + sText + ".");
                 if (config.onFetchWord) {
                     call(config.onFetchWord, handle, sText)();
                 }
