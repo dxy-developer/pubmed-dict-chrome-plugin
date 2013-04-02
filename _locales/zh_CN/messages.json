@@ -19,6 +19,10 @@
         "message": "请输入有效的英文单词"
     },
 
+    "searchWithDXYDict": {
+        "message": "丁香园医学英汉词典"
+    },
+
     "ERROR_UNKNOWN": {
         "message": "未知错误"
     },

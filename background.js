@@ -113,6 +113,29 @@
         )
     }
 
+    /**
+     * Create a context menu
+     */
+    if (!isSogouExplorer) {
+        chrome.runtime.onInstalled.addListener(function() {
+            chrome.contextMenus.create({
+              "id": "DxyDictSearcher",
+              "title" : chrome.i18n.getMessage("searchWithDXYDict"),
+              "type" : "normal",
+              "contexts" : ["selection"]
+            });
+
+            chrome.contextMenus.onClicked.addListener(function(info, tab) {
+                var selectionText = info.selectionText || false;
+                if (selectionText && selectionText.length) {
+                    chrome.tabs.create({
+                        url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
+                    });
+                }
+            });
+        });
+    }
+
     // Bind to global cscope
     cscope.fetchTranslate = fetchTranslate;
     cscope.Cacher = Cacher;
