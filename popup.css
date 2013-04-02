@@ -142,6 +142,7 @@ div.pubmed-popup .pubmed-content dl dd hr {
     *zoom: 1;
 }
 
+.chrome-popup div.pubmed-popup .pubmed-content h4,
 .chrome-popup div.pubmed-popup .more {
     display: none;
 }
@@ -182,5 +183,4 @@ div.pubmed-popup .pubmed-content dl dd hr {
 .chrome-popup .config-area p#config {
     margin: .5em 0;
 }
-
 

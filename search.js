@@ -51,7 +51,7 @@
 
         searchForm.addEventListener('submit', function(e) {
             var word = searchWord.value.toLowerCase();
-            if (isValidWord(word)) {
+            if (true || isValidWord(word)) {
                 fetcherHandle.fetchWord(word);
             }
             stopEvent(e);
