@@ -5,7 +5,7 @@
  * @link   http://www.gracecode.com/
  */
 
-~function() {
+Zepto(function($){
     var isSogouExplorer = false;
     if (typeof sogouExplorer != 'undefined') {
         isSogouExplorer = true;
@@ -96,5 +96,5 @@
     update();
     window.addEventListener("focus", update, false);
     window.addEventListener("blue",  update, false);
-} ();
+});
 

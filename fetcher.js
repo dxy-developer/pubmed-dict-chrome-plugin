@@ -96,12 +96,19 @@
                 definition = tmp.join("");
             }
             
-            var phonetic = 
-                (data.phonetic.BrE ? '英['+ data.phonetic.BrE +'] ' : "") + 
-                (data.phonetic.NAmE ? '美['+ data.phonetic.NAmE +'] ' : "");
+            var phonetic = "";
+            if (Zepto.isArray(data.phonetic)) {
+               Zepto.each(data.phonetic, function(index, item) {
+                    if (item.BrE) {
+                      phonetic += '英['+ item.BrE +'] ';
+                    }
 
-            if (phonetic.length) {
-                phonetic = '('+phonetic+')';
+                    if (item.NAmE) {
+                        phonetic += '美['+ item.NAmE +'] ';
+                    }
+                });
+            } else if (data.phonetic.length) {
+                phonetic = '('+ Zepto.trim(data.phonetic) +')';
             }
 
             return {

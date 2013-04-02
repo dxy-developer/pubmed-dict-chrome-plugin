@@ -249,6 +249,7 @@
                     call(config.onHide, handle, e)();
                 }
                 popup.style.display = 'none';
+                //this.popupContent.innerHTML = "";
             }
         });
 
