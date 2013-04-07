@@ -25,6 +25,8 @@
             decidePopupPostioin: decidePopupPostioin
         }, body = document.body;
 
+        var MAX_WORD_LENGTH = 32;
+
         // Regexp for test words
         var rHasWord = /\b[a-z]+([-'\ ][a-z]+)*\b/i, 
             rAllWord = /\b[a-z]+([-'][a-z]+)*\b/gmi, 
@@ -51,10 +53,6 @@
                 e.stopPropagation();
             }
             e.preventDefault();
-        }
-
-        var trim = function(s) {
-            return s.replace(/(^\s*)|(\s*$)/g, ""); 
         }
 
         var inElement = function(needle, stack) {
@@ -129,8 +127,9 @@
        
             var sText = (document.selection == undefined) ?  
                             document.getSelection().toString() : document.selection.createRange().text;
+                sText = Zepto.trim(sText);
 
-            if (trim(sText).length > 0 && rHasWord.test(sText)) {
+            if (sText.length > 0 && sText.length < MAX_WORD_LENGTH && rHasWord.test(sText)) {
                 console.log("Selected word is " + sText + ".");
                 if (config.onFetchWord) {
                     call(config.onFetchWord, handle, sText)();
