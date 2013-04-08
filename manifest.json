@@ -24,8 +24,10 @@
         "dictionary.png"
     ],
 
+    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+
     "background": {
-        "scripts": ["background.js"],
+        "scripts": ["libs/underscore.min.js", "libs/zepto.min.js", "common.js", "background.js"],
         "persistent": false
     },
 

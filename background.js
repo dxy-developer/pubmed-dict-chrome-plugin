@@ -58,7 +58,6 @@
             // if cache prisented
             console.info("Cache words '"+ words +"' hited, get from localStorage.")
             var data = Cacher.fetchFromCache(words);
-            console.info(data);
             return callback(data);
         }
 
@@ -132,6 +131,10 @@
                         url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
                     });
                 }
+            });
+
+            getScript(URL_GA_SCRIPT, function() {
+                console.log("Analytics data has sended.");
             });
         });
     }

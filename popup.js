@@ -25,7 +25,7 @@
             decidePopupPostioin: decidePopupPostioin
         }, body = document.body;
 
-        var MAX_WORD_LENGTH = 32;
+        var MAX_WORD_LENGTH = 64;
 
         // Regexp for test words
         var rHasWord = /\b[a-z]+([-'\ ][a-z]+)*\b/i, 

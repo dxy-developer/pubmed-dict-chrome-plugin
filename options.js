@@ -6,7 +6,6 @@
 
     var get = (function() {
 
-
         return function(key, defVal, callback) {
             if (isSogouExplorer) {
                 var value = localStorage.getItem(key);
@@ -46,8 +45,12 @@
         get: get, getAll: getAll, set: set
     }
 
-    var opts = [{'key': 'select', 'def': 'true'}, {'key': 'hover', 'def': 'false'}, {'key': 'ctrl', 'def': 'false'}, {'key': 'sentences', 'def': 'true'}],
-        eleOpts = [];
+    var opts = [{'key': 'select', 'def': 'true'}, 
+                {'key': 'hover', 'def': 'false'}, 
+                {'key': 'ctrl', 'def': 'false'}, 
+                {'key': 'sentences', 'def': 'true'}],
+                eleOpts = [];
+
     for(index in opts) {
         var key = opts[index].key, id = 'opt_' + key;
         var ele = document.getElementById(id);
@@ -65,6 +68,22 @@
                     Option.set(k, value, function() {
                         console.info('[Option] Set option '+ k +' as '+ value +'.');
                     });
+
+                    try {
+                        switch(k) {
+                        case 'select':
+                            _gaq.push(['_trackEvent', 'options_page', 'click', 'select_word']);
+                            break;
+
+                        case 'hover':
+                            _gaq.push(['_trackEvent', 'options_page', 'click', 'hover_word']);
+                            break;
+
+                        case 'sentences':
+                            _gaq.push(['_trackEvent', 'options_page', 'click', 'show_sentenses']);
+                            break;
+                        }
+                    } catch(e) {}
                 });
             }();
 
@@ -79,8 +98,20 @@
             var backgroundPage = chrome.extension.getBackgroundPage();
             if (backgroundPage) {
                 backgroundPage.Cacher.clear();
+                try {
+                    _gaq.push(['_trackEvent', 'options_page', 'click', 'clear_cache']);
+                } catch(e) {}
             }
         });
     }
+
+    // ga
+    try {
+        _gaq.push(['_trackEvent', 'popup_page', 'click', 'advance_config']);
+        getScript(URL_GA_SCRIPT, function() {
+            console.log("Analytics data has sended.");
+        });
+    } catch(e) {};
+    
     cscope.Option = Option;
 }(window);

@@ -54,6 +54,11 @@
             if (true || isValidWord(word)) {
                 fetcherHandle.fetchWord(word);
             }
+
+            try {
+                _gaq.push(['_trackEvent', 'popup_page', 'click', 'search']);
+            } catch(e) {}
+
             stopEvent(e);
         });
 
@@ -64,6 +69,11 @@
             }  else {
                 chrome.tabs.create({url: "options.html"});
             }
+
+            try {
+                _gaq.push(['_trackEvent', 'popup_page', 'click', 'advance_config']);
+            } catch(e) {}
+
             stopEvent(e);
         });
 
@@ -92,6 +102,18 @@
                             Option.set(k, val, function(val) {
                                 console.info('[Option]' + k + " set value as " + val);
                             });
+
+                            try {
+                                switch(k) {
+                                case 'select':
+                                    _gaq.push(['_trackEvent', 'popup_page', 'click', 'select_word']);
+                                    break;
+
+                                case 'hover':
+                                    _gaq.push(['_trackEvent', 'popup_page', 'click', 'hover_word']);
+                                    break;
+                                }
+                            } catch(e) {}
                         });
                     }();
                 });
@@ -99,6 +121,9 @@
         };
 
         setTimeout(function() {
+            getScript(URL_GA_SCRIPT, function() {
+                console.log("Analytics data has sended.");
+            });
             searchWord.focus();
         }, 0);
 }();

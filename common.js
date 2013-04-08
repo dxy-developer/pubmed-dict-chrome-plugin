@@ -10,6 +10,12 @@
         isSogouExplorer = true;
     }
 
+    var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-38076372-14']);
+        _gaq.push(['_trackPageview']);
+    cscope._gaq = _gaq;
+    cscope.URL_GA_SCRIPT = "https://ssl.google-analytics.com/ga.js?t=" + (+new Date()) +"&fuckgfw";
+
 
     var getMessage = (function() {
         var messages = {
@@ -37,7 +43,14 @@
             }
         }
     })();
-
     cscope.getMessage = getMessage;
 
+    // ... GetScript
+    cscope.getScript = function (url, success, error) {
+         var script = document.createElement("script");
+             script.setAttribute("src",       url);
+             script.addEventListener("load",  success);
+             script.addEventListener("error", error);
+         document.body.appendChild(script);
+    };
 } (window);
