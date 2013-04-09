@@ -17,12 +17,12 @@ z {
 }
 
 div.pubmed-popup {
+    font: 12px/1.5em arial,verdana,'Helvetica',sans-serif!important;
     display: none;
     position: fixed;
     z-index: 99999;
     left: 100px;
     top: 100px;
-    font-size: 12px;
     border: 3px solid #ccc;
     width: 350px!important;
     color: #333;
@@ -65,9 +65,12 @@ div.pubmed-popup .pubmed-content {
 
 div.pubmed-popup .pubmed-content h4,
 div.pubmed-popup .pubmed-content h5 {
-    font-size: 1.2em;
+    font-size: 1em;
     margin: .5em 0 0 0;
     font-weight: bold;
+    font-family: arial,verdana,'Helvetica',sans-serif!important;
+    text-transform: capitalize!important;
+    text-decoration: none;
 }
 
 div.pubmed-popup .pubmed-content h5 {
