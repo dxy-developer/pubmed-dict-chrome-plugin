@@ -104,14 +104,15 @@
                             });
 
                             try {
+                                _gaq = self._gaq || _gaq;
                                 switch(k) {
-                                case 'select':
-                                    _gaq.push(['_trackEvent', 'popup_page', 'click', 'select_word']);
-                                    break;
+                                    case 'select':
+                                        _gaq.push(['_trackEvent', 'popup_page', 'click', 'select_word']);
+                                        break;
 
-                                case 'hover':
-                                    _gaq.push(['_trackEvent', 'popup_page', 'click', 'hover_word']);
-                                    break;
+                                    case 'hover':
+                                        _gaq.push(['_trackEvent', 'popup_page', 'click', 'hover_word']);
+                                        break;
                                 }
                             } catch(e) {}
                         });
@@ -120,10 +121,12 @@
             });
         };
 
+        /*
         setTimeout(function() {
             getScript(URL_GA_SCRIPT, function() {
                 console.log("Analytics data has sended.");
             });
             searchWord.focus();
         }, 0);
+        */
 }();

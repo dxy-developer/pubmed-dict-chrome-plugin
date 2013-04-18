@@ -49,12 +49,16 @@ Zepto(function($){
 
             try {
                 var type = (e.type == 'mouseup') ? 'select' : 'hover';
+                _gaq = self._gaq || _gaq;
                 _gaq.push(['_trackEvent', 'popup', 'display', type]);
             } catch(error) { }
         },
 
         onClickMore: function() {
-            // _gaq.push(['_trackEvent', 'popup', 'redirect', 'redirect']);
+            try {
+                _gaq = self._gaq || _gaq;
+                _gaq.push(['_trackEvent', 'popup', 'redirect', 'redirect']);
+            } catch(error) { }
         },
 
         onHide: function(e) {
@@ -105,10 +109,5 @@ Zepto(function($){
     update();
     window.addEventListener("focus", update, false);
     window.addEventListener("blue",  update, false);
-
-    // ga
-    getScript(URL_GA_SCRIPT, function() {
-        console.log("Analytics data has sended.");
-    });
 });
 

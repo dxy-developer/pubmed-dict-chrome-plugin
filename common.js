@@ -10,7 +10,11 @@
         isSogouExplorer = true;
     }
 
-    var _gaq = _gaq || [];
+    var _gaq = (typeof self != 'undefined' && self._gaq) ? self._gaq : _gaq;
+        if (!_gaq) {
+            _gaq = [];
+            _gaq.push(['_gaqNotAvaiable', true]);
+        }
         _gaq.push(['_setAccount', 'UA-38076372-14']);
         _gaq.push(['_trackPageview']);
     cscope._gaq = _gaq;

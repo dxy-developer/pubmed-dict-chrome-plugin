@@ -14,6 +14,7 @@
             delay: 1000, // ms
             onFetchWord: null,
             onShow: null,
+            onClickMore: null,
             onHide: null,
             onMove: null
         }; 
