@@ -37,23 +37,33 @@ div.pubmed-popup .popup-title {
     padding: .5em;
     color: #fff;
     position: relative;
-    cursor: default;
+    cursor: move;
     height: 20px;
     line-height: 20px;
 }
 
+div.pubmed-popup .popup-title .pin,
 div.pubmed-popup .popup-title .close {
     display: block;
     height: 18px;
     width: 18px;
     position: absolute;
-    right: .5em;
+    right: 5px;
     top: .5em;
     cursor: pointer;
     z-index: 9999;
     opacity: .75;
     text-indent: -999em;
-    background: url(data:image/gif;base64,R0lGODlhEgASAKIHAHd3d93d3bu7u4iIiKqqqu7u7v///////yH5BAEAAAcALAAAAAASABIAAANReLrc/pCJR6AwVWJ3zVbdB3pkFRpFphCkx5LF4AxtG0NDUd8R7emyyOmnaoQKuhLnh8wxiwIdMiDLIQsBAIMwDR4GAay2QaA2wGNHcZGOuA8JADs=);
+    background: red;
+}
+
+div.pubmed-popup .popup-title .pin {
+    background: yellow;
+    right: 30px;
+}
+
+div.pubmed-popup .popup-title .pined {
+    background: green;
 }
 
 div.pubmed-popup .pubmed-content {

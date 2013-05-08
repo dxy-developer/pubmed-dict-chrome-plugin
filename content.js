@@ -28,6 +28,7 @@ Zepto(function($){
    var popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
+                            + '<a class="pin" title="固定">Pin</a>'
                             + '<a class="close" title="关闭">Close</a>'
                             + '</div> <div class="pubmed-content"></div>';
         document.body.appendChild(popup);
@@ -38,7 +39,26 @@ Zepto(function($){
 
     // --
 
+    var KEY_ISPINED = "isPined", KEY_PINED_LEFT = "pinLeft", KEY_PINED_TOP = "pinTOP",
+        pinLeft = localStorage.getItem(KEY_PINED_LEFT) || 0, pinTop = localStorage.getItem(KEY_PINED_TOP) || 0;
+
     var popupHandler = new Popup(popup, {
+        onPin: function(e, left, top) {
+            localStorage.setItem(KEY_ISPINED, "true");
+            console.info("Mark pin status as true.");
+
+            localStorage.setItem(KEY_PINED_LEFT, left);
+            console.info("Mark pin left status " + left);
+
+            localStorage.setItem(KEY_PINED_TOP, top);
+            console.info("Mark pin top status " + top);
+        },
+
+        onUnPin: function(e) {
+            localStorage.setItem(KEY_ISPINED, "false");
+            console.info("Mark pin status as false");
+        },
+
         onShow: function(e) {
             if (this.popupContent) {
                 this.popupContent.innerHTML = getMessage("waiting");
@@ -72,6 +92,13 @@ Zepto(function($){
         }
     });
 
+    if (localStorage.getItem(KEY_ISPINED) == "true") {
+        console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
+        popupHandler.markAsPin(pinLeft, pinTop);
+    } else {
+        console.info("Mark as UnPin.");
+        popupHandler.markAsUnPin();
+    }
 
     var fetcherHandle = new Fetcher({
         onFinished: function(response) {

@@ -4,10 +4,12 @@
  * @date   2013-03-18
  */
 
-(function(cscope) {
+Zepto(function($) {
     var Popup = function(popup, config) {
         var defConfig = {
-            clsClose: '.close',
+            clsClose: 'close',
+            clsPin: 'pin',
+            clsPined: 'pined',
             clsContent: '.pubmed-content',
             enableMouseover: true,
             enableSelect: true,
@@ -16,6 +18,8 @@
             onShow: null,
             onClickMore: null,
             onHide: null,
+            onPin: null,
+            onUnPin: null,
             onMove: null
         }; 
         var handle = {
@@ -26,7 +30,8 @@
             decidePopupPostioin: decidePopupPostioin
         }, body = document.body;
 
-        var MAX_WORD_LENGTH = 64;
+        var MAX_WORD_LENGTH = 64, 
+            isPined = false, pinLeft = 0, pinTop = 0;
 
         // Regexp for test words
         var rHasWord = /\b[a-z]+([-'\ ][a-z]+)*\b/i, 
@@ -40,7 +45,7 @@
         config = _.extend(defConfig, config);
 
         /**
-         *
+         * 运行指定作用域的函数
          */
         function call(fn, obj) {
             var arg = _.rest(arguments, 2);
@@ -68,17 +73,21 @@
         }
 
         /**
-         *
+         * 根据事件判断位置
          */
         var decidePopupPostioin = function(e) {
             var left = 0, top = 0, popupWidth = popup.clientWidth;
 
             if (e.pageX || e.pageY) {
                 left = e.pageX - body.scrollLeft;
-                top = e.pageY - body.scrollTop;
+                top  = e.pageY - body.scrollTop;
             } else {
                 left = e.clientX + body.scrollLeft - body.clientLeft;
-                top = e.clientY + body.scrollTop  - body.clientTop;
+                top  = e.clientY + body.scrollTop  - body.clientTop;
+            }
+
+            if (isPined) {
+                left = pinLeft; top = pinTop;
             }
 
             popup.style.left = left + 'px';
@@ -87,7 +96,7 @@
 
 
         /**
-         *
+         * 判断选择框出现的位置
          */
         var decidePopupOffset = function() {
             var left = parseInt(popup.style.left), 
@@ -103,6 +112,7 @@
                 top = window.innerHeight - popupHeight * 1.1;
             }
 
+            // ...
             popup.style.left = left + 'px';
             popup.style.top  = top + 'px';
         }
@@ -113,6 +123,9 @@
          */
         var mouseupTrigger = function(e){
             var nodeName = e.target.nodeName.toLowerCase();
+
+            var target = e.target;
+            //console.info(target);
 
             if (handle.disableSelectEvent) {
                 return;
@@ -143,7 +156,7 @@
 
 
         /**
-         *
+         * 鼠标悬浮事件
          */
         var timer, hoverX, hoverY;
         var mouseoverTrigger = function(e) {
@@ -230,8 +243,19 @@
             config: config,
             decidePopupOffset: decidePopupOffset,
             popupContent: popup.querySelector(config.clsContent),
+            pinTrigger: pinTrigger,
+            closeTirgger: popupCloser,
             setEnableSelect: function(flag) {
                 config.enableSelect = !!flag;
+            },
+            markAsPin: function(left, top) {
+                isPined = true;
+                pinLeft = left; pinTop  = top;
+                pinTrigger.addClass(config.clsPined);
+            },
+            markAsUnPin: function() {
+                isPined = false;
+                pinTrigger.removeClass(config.clsPined);
             },
             setEnableMouseover: function(flag) {
                 config.enableMouseover = !!flag;
@@ -243,27 +267,132 @@
                 decidePopupPostioin(e);
                 popup.style.display = 'block';
             },
-
             hide: function(e) {
                 if (config.onHide) {
                     call(config.onHide, handle, e)();
                 }
+
                 popup.style.display = 'none';
-                //this.popupContent.innerHTML = "";
+                this.popupContent.innerHTML = "";
             }
         });
 
         // Close Button
-        var popupCloser = popup.querySelector(config.clsClose);
-        popupCloser.addEventListener("click", function() {
-            handle.hide();
+        var popupCloser = $(popup).find("." + config.clsClose);
+        popupCloser.bind("click", function(e) {
+            if (isPined) {
+                var position = Zepto(popup).position();
+                pinLeft = position.left; pinTop  = position.top;
+                call(config.onPin, handle, e, position.left, position.top)();
+            }
+            handle.hide(e);
+            return false;
         });
+
+        var pinTrigger = $(popup).find("." + config.clsPin);
+        pinTrigger.bind("click", function(e) {
+            if ($(pinTrigger).hasClass(config.clsPined)) {
+                call(config.onUnPin, handle, e)();
+                $(pinTrigger).removeClass(config.clsPined);
+                isPined = false;
+            } else {
+                var position = Zepto(popup).position();
+                call(config.onPin, handle, e, position.left, position.top)();
+                pinLeft = position.left; pinTop  = position.top;
+                $(pinTrigger).addClass(config.clsPined);
+                isPined = true;
+            }
+            return false;
+        });
+
+
+        // 设置可以拖动的
+        var setDragable = function(bar, target) {
+            var params = {
+                left: 0, top: 0, currentX: 0, currentY: 0, flag: false
+            };
+
+            //获取相关CSS属性
+            var getCss = function(o,key){
+                return o.currentStyle? o.currentStyle[key] : document.defaultView.getComputedStyle(o,false)[key]; 	
+            };
+
+            //拖拽的实现
+            var startDrag = function(bar, target){
+                if(getCss(target, "left") !== "auto"){
+                    params.left = getCss(target, "left");
+                }
+
+                if(getCss(target, "top") !== "auto"){
+                    params.top = getCss(target, "top");
+                }
+
+                bar.addEventListener("mousedown", function(event) {
+                    params.flag = true;
+                    if(!event){
+                        event = window.event;
+                        //防止IE文字选中
+                        bar.onselectstart = function(){
+                            return false;
+                        }  
+                    }
+                    var e = event;
+                    params.currentX = e.clientX;
+                    params.currentY = e.clientY;
+
+                    // http://stackoverflow.com/questions/2212542/how-can-i-prevent-selecting-text-in-google-chrome
+                    var style = document.body.style;
+                        style.userSelect = "none"; 
+                        style.webkitUserSelect = "none";
+
+                    stopEvent(e);
+                });
+
+                document.addEventListener("mouseup", function(e) {
+                    params.flag = false;	
+                    if(getCss(target, "left") !== "auto"){
+                        params.left = getCss(target, "left");
+                    }
+                    if(getCss(target, "top") !== "auto"){
+                        params.top = getCss(target, "top");
+                    }
+
+                    if (isPined) {
+                        pinLeft = params.left; pinTop  = params.top;
+                        call(config.onPin, handle, e, params.left, params.top)();
+                    }
+
+                    var style = document.body.style;
+                        style.userSelect = "auto"; 
+                        style.webkitUserSelect = "auto";
+
+                    stopEvent(e);
+                });
+
+                document.addEventListener("mousemove", function(event) {
+                    var e = event ? event: window.event;
+                    if(params.flag){
+                        var nowX = e.clientX, nowY = e.clientY;
+                        var disX = nowX - params.currentX, disY = nowY - params.currentY;
+                        target.style.left = parseInt(params.left) + disX + "px";
+                        target.style.top = parseInt(params.top) + disY + "px";
+                    }
+                });	
+            }
+
+            startDrag(bar, target);
+        };
+
+        // 设置可以拖动的元素
+        setDragable(popup.querySelector(".popup-title"), popup);
 
         body.addEventListener("mouseup", mouseupTrigger, false);
         body.addEventListener("mouseover", mouseoverTrigger, false);
 
         window.addEventListener("scroll", function(e) {
-            handle.hide();
+            if (!isPined) {
+                handle.hide(e);
+            }
         }, false);
 
 
@@ -271,6 +400,6 @@
         return handle;
     }
 
-    cscope.Popup = Popup;
-})(this);
+    window.Popup = Popup;
+});
 
