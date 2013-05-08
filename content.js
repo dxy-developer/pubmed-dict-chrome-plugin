@@ -92,13 +92,6 @@ Zepto(function($){
         }
     });
 
-    if (localStorage.getItem(KEY_ISPINED) == "true") {
-        console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
-        popupHandler.markAsPin(pinLeft, pinTop);
-    } else {
-        console.info("Mark as UnPin.");
-        popupHandler.markAsUnPin();
-    }
 
     var fetcherHandle = new Fetcher({
         onFinished: function(response) {
@@ -131,6 +124,17 @@ Zepto(function($){
     var update = function() {
         fetcherHandle.updateOptions();
         popupHandler.hide();
+
+        pinLeft = localStorage.getItem(KEY_PINED_LEFT) || 0;
+        pinTop  = localStorage.getItem(KEY_PINED_TOP)  || 0;
+
+        if (localStorage.getItem(KEY_ISPINED) == "true") {
+            console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
+            popupHandler.markAsPin(pinLeft, pinTop);
+        } else {
+            console.info("Mark as UnPin.");
+            popupHandler.markAsUnPin();
+        }
     }
 
     update();

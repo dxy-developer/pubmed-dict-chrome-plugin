@@ -250,7 +250,8 @@ Zepto(function($) {
             },
             markAsPin: function(left, top) {
                 isPined = true;
-                pinLeft = left; pinTop  = top;
+                pinLeft = left;
+                pinTop = top;
                 pinTrigger.addClass(config.clsPined);
             },
             markAsUnPin: function() {
@@ -358,7 +359,8 @@ Zepto(function($) {
                     }
 
                     if (isPined) {
-                        pinLeft = params.left; pinTop  = params.top;
+                        pinLeft = params.left;
+                        pinTop  = params.top;
                         call(config.onPin, handle, e, params.left, params.top)();
                     }
 
