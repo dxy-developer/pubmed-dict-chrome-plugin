@@ -277,7 +277,7 @@ Zepto(function($) {
                 decidePopupPostioin(e);
                 //popup.style.display = 'block';
                 $(popup).css({opacity: 0, display: "block"});
-                $(popup).animate({ opacity: .9 }, 250, 'ease-in');
+                $(popup).animate({ opacity: .95 }, 250, 'ease-in');
             },
             hide: function(e) {
                 if (config.onHide) {
