@@ -72,15 +72,15 @@
                     try {
                         switch(k) {
                         case 'select':
-                            _gaq.push(['_trackEvent', 'options_page', 'click', 'select_word']);
+                            markAnalyticsData(['_trackEvent', 'options_page', 'click', 'select_word']);
                             break;
 
                         case 'hover':
-                            _gaq.push(['_trackEvent', 'options_page', 'click', 'hover_word']);
+                            markAnalyticsData(['_trackEvent', 'options_page', 'click', 'hover_word']);
                             break;
 
                         case 'sentences':
-                            _gaq.push(['_trackEvent', 'options_page', 'click', 'show_sentenses']);
+                            markAnalyticsData(['_trackEvent', 'options_page', 'click', 'show_sentenses']);
                             break;
                         }
                     } catch(e) {}
@@ -99,7 +99,7 @@
             if (backgroundPage) {
                 backgroundPage.Cacher.clear();
                 try {
-                    _gaq.push(['_trackEvent', 'options_page', 'click', 'clear_cache']);
+                    markAnalyticsData(['_trackEvent', 'options_page', 'click', 'clear_cache']);
                 } catch(e) {}
             }
         });
@@ -107,7 +107,7 @@
 
     // ga
     try {
-        _gaq.push(['_trackEvent', 'popup_page', 'click', 'advance_config']);
+        markAnalyticsData(['_trackEvent', 'popup_page', 'click', 'advance_config']);
         getScript(URL_GA_SCRIPT, function() {
             console.log("Analytics data has sended.");
         });

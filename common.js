@@ -10,6 +10,7 @@
         isSogouExplorer = true;
     }
 
+    /*
     var _gaq = (typeof self != 'undefined' && self._gaq) ? self._gaq : _gaq;
         if (!_gaq) {
             _gaq = [];
@@ -19,7 +20,7 @@
         _gaq.push(['_trackPageview']);
     cscope._gaq = _gaq;
     cscope.URL_GA_SCRIPT = "https://ssl.google-analytics.com/ga.js?t=" + (+new Date()) +"&fuckgfw";
-
+    */
 
     var getMessage = (function() {
         var messages = {
@@ -57,4 +58,12 @@
              script.addEventListener("error", error);
          document.body.appendChild(script);
     };
+
+    // 载入 GA 代码
+    cscope.getScript(chrome.extension.getURL("gs-inject.js"), function() {
+        cscope.markAnalyticsData = function(data) {
+            console.info("Recived ga data " + data);
+            document.body.setAttribute("ga", JSON.stringify(data));
+        };
+    });
 } (window);

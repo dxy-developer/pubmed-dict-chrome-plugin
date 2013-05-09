@@ -30,9 +30,7 @@ Zepto(function($){
                             + '</div> <div class="pubmed-content"></div>';
         document.body.appendChild(popup);
 
-
     // --
-
     var KEY_ISPINED = "isPined", KEY_PINED_LEFT = "pinLeft", KEY_PINED_TOP = "pinTOP",
         pinLeft = localStorage.getItem(KEY_PINED_LEFT) || 0, pinTop = localStorage.getItem(KEY_PINED_TOP) || 0;
 
@@ -49,8 +47,7 @@ Zepto(function($){
                 console.info("Mark pin left,top status " + left + "," + top);
 
                 try {
-                    _gaq = self._gaq || _gaq;
-                    _gaq.push(['_trackEvent', 'popup', 'lock', 'lock']);
+                    markAnalyticsData(['_trackEvent', 'popup', 'lock', 'lock']);
                 } catch(error) { }
             });
         },
@@ -62,8 +59,7 @@ Zepto(function($){
                 console.info("Mark pin status as false");
 
                 try {
-                    _gaq = self._gaq || _gaq;
-                    _gaq.push(['_trackEvent', 'popup', 'unlock', 'unlock']);
+                    markAnalyticsData(['_trackEvent', 'popup', 'unlock', 'unlock']);
                 } catch(error) { }
             });
         },
@@ -78,15 +74,13 @@ Zepto(function($){
 
             try {
                 var type = (e.type == 'mouseup') ? 'select' : 'hover';
-                _gaq = self._gaq || _gaq;
-                _gaq.push(['_trackEvent', 'popup', 'display', type]);
+                markAnalyticsData(['_trackEvent', 'popup', 'display', type]);
             } catch(error) { }
         },
 
         onClickMore: function() {
             try {
-                _gaq = self._gaq || _gaq;
-                _gaq.push(['_trackEvent', 'popup', 'redirect', 'redirect']);
+                markAnalyticsData(['_trackEvent', 'popup', 'redirect', 'redirect']);
             } catch(error) { }
         },
 
