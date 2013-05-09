@@ -6,11 +6,6 @@
  */
 
 Zepto(function($){
-    var isSogouExplorer = false;
-    if (typeof sogouExplorer != 'undefined') {
-        isSogouExplorer = true;
-    }
-
     function isIframe() {
         return (top === self) ? false : true;
     }
@@ -24,8 +19,9 @@ Zepto(function($){
             link.media = 'all';
         head.appendChild(link);
     }
+    loadCSS(chrome.extension.getURL("popup.css"));
 
-   var popup = document.createElement('div');
+    var popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
                             + '<span class="message"></span>'
@@ -34,9 +30,6 @@ Zepto(function($){
                             + '</div> <div class="pubmed-content"></div>';
         document.body.appendChild(popup);
 
-    if (!isSogouExplorer) {
-        loadCSS(chrome.extension.getURL("popup.css"));
-    }
 
     // --
 
@@ -47,19 +40,22 @@ Zepto(function($){
         pinedMsg: '已固定窗口',
         unPinedMsg: '取消固定',
         onPin: function(e, left, top) {
-            localStorage.setItem(KEY_ISPINED, "true");
-            console.info("Mark pin status as true.");
-
-            localStorage.setItem(KEY_PINED_LEFT, left);
-            console.info("Mark pin left status " + left);
-
-            localStorage.setItem(KEY_PINED_TOP, top);
-            console.info("Mark pin top status " + top);
+            chrome.storage.sync.set({
+                KEY_ISPINED: "true", 
+                KEY_PINED_LEFT: left,
+                KEY_PINED_TOP: top
+            }, function(){
+                console.info("Mark pin status as true.");
+                console.info("Mark pin left,top status " + left + "," + top);
+            });
         },
 
         onUnPin: function(e) {
-            localStorage.setItem(KEY_ISPINED, "false");
-            console.info("Mark pin status as false");
+            chrome.storage.local.set({
+                KEY_ISPINED: "false"
+            }, function() {
+                console.info("Mark pin status as false");
+            });
         },
 
         onShow: function(e) {
@@ -128,20 +124,21 @@ Zepto(function($){
         fetcherHandle.updateOptions();
         popupHandler.hide();
 
-        pinLeft = localStorage.getItem(KEY_PINED_LEFT) || 0;
-        pinTop  = localStorage.getItem(KEY_PINED_TOP)  || 0;
+        chrome.storage.sync.get({KEY_ISPINED: "true", KEY_PINED_TOP: 0, KEY_PINED_LEFT: 0}, function(result) {
+            if (result.KEY_ISPINED == "true") {
+                pinLeft = result.KEY_PINED_LEFT || 0;
+                pinTop  = result.KEY_PINED_TOP  || 0;
 
-        if (localStorage.getItem(KEY_ISPINED) == "true") {
-            console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
-            popupHandler.markAsPin(pinLeft, pinTop);
-        } else {
-            console.info("Mark as UnPin.");
-            popupHandler.markAsUnPin();
-        }
-    }
+                popupHandler.markAsPin(pinLeft, pinTop);
+                console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
+            } else {
+                popupHandler.markAsUnPin();
+                console.info("Mark as UnPin.");
+            }
+        });
+    };
 
     update();
     window.addEventListener("focus", update, false);
     window.addEventListener("blue",  update, false);
 });
-

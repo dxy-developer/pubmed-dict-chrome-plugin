@@ -90,11 +90,17 @@ Zepto(function($) {
             }
 
             if (isPined) {
-                left = pinLeft; top = pinTop;
+                if (pinLeft == 0 || pinTop == 0) {
+                    pinLeft = left;
+                    pinTop  = top;
+                } else {
+                    left = pinLeft;
+                    top  = pinTop;
+                }
             }
 
-            popup.style.left = left + 'px';
-            popup.style.top  = top + 'px';
+            popup.style.left = parseInt(left) + 'px';
+            popup.style.top  = parseInt(top) + 'px';
         }
 
 
@@ -254,7 +260,7 @@ Zepto(function($) {
             markAsPin: function(left, top) {
                 isPined = true;
                 pinLeft = left;
-                pinTop = top;
+                pinTop  = top;
                 pinTrigger.addClass(config.clsPined);
             },
             markAsUnPin: function() {
@@ -269,22 +275,24 @@ Zepto(function($) {
                     call(config.onShow, handle, e)();
                 }
                 decidePopupPostioin(e);
-                popup.style.display = 'block';
+                //popup.style.display = 'block';
+                $(popup).css({opacity: 0, display: "block"});
+                $(popup).animate({ opacity: .9 }, 250, 'ease-in');
             },
             hide: function(e) {
                 if (config.onHide) {
                     call(config.onHide, handle, e)();
                 }
 
-                popup.style.display = 'none';
-                this.popupContent.innerHTML = "";
+                $(popup).hide();
+                $(popup).find(config.clsContent).html("");
             }
         });
 
         // Close Button
         var popupCloser = $(popup).find("." + config.clsClose);
         popupCloser.bind("click", function(e) {
-            if (isPined) {
+            if (isPined && popup.style.block == "block") {
                 var position = Zepto(popup).position();
                 pinLeft = position.left; pinTop  = position.top;
                 call(config.onPin, handle, e, position.left, position.top)();
@@ -325,6 +333,7 @@ Zepto(function($) {
             var params = {
                 left: 0, top: 0, currentX: 0, currentY: 0, flag: false
             };
+            var allowPin = false;
 
             //获取相关CSS属性
             var getCss = function(o,key){
@@ -359,6 +368,7 @@ Zepto(function($) {
                         style.userSelect = "none"; 
                         style.webkitUserSelect = "none";
 
+                    allowPin = true;
                     stopEvent(e);
                 });
 
@@ -371,10 +381,11 @@ Zepto(function($) {
                         params.top = getCss(target, "top");
                     }
 
-                    if (isPined) {
+                    if (isPined && popup.style.display == "block" && allowPin) {
                         pinLeft = params.left;
                         pinTop  = params.top;
                         call(config.onPin, handle, e, params.left, params.top)();
+                        allowPin = false;
                     }
 
                     var style = document.body.style;
