@@ -47,6 +47,11 @@ Zepto(function($){
             }, function(){
                 console.info("Mark pin status as true.");
                 console.info("Mark pin left,top status " + left + "," + top);
+
+                try {
+                    _gaq = self._gaq || _gaq;
+                    _gaq.push(['_trackEvent', 'popup', 'lock', 'lock']);
+                } catch(error) { }
             });
         },
 
@@ -55,6 +60,11 @@ Zepto(function($){
                 KEY_ISPINED: "false"
             }, function() {
                 console.info("Mark pin status as false");
+
+                try {
+                    _gaq = self._gaq || _gaq;
+                    _gaq.push(['_trackEvent', 'popup', 'unlock', 'unlock']);
+                } catch(error) { }
             });
         },
 
