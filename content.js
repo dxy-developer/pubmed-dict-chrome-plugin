@@ -94,8 +94,10 @@ Zepto(function($){
 
     var fetcherHandle = new Fetcher({
         onFinished: function(response) {
-            var html = fetcherHandle.getResponseHTML(response);
-            popupHandler.popupContent.innerHTML = (html.length > 0) ? html : getMessage("notfound");
+            var html = Zepto.trim(fetcherHandle.getResponseHTML(response));
+            console.info("getResponseHTML: " + html);
+            //popupHandler.popupContent.innerHTML = (html.length > 0) ? html : getMessage("notfound");
+            $(popupHandler.popupContent).html(html.length ? html: getMessage("notfound"));
             popupHandler.decidePopupOffset();
         },
 
