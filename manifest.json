@@ -35,7 +35,6 @@
     "content_scripts": [{
         "matches": ["http://*/*"],
         "js": [
-               //"libs/ga.js",
                "libs/underscore.min.js",
                "libs/zepto.min.js",
                "common.js", 
