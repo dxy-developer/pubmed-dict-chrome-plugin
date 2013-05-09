@@ -28,7 +28,8 @@ Zepto(function($){
    var popup = document.createElement('div');
         popup.className = "pubmed-popup";
         popup.innerHTML = '<div class="popup-title">'+ getMessage("extName")
-                            + '<a class="pin" title="固定">Pin</a>'
+                            + '<span class="message"></span>'
+                            + '<a class="pin" title="固定和取消固定窗口">Pin</a>'
                             + '<a class="close" title="关闭">Close</a>'
                             + '</div> <div class="pubmed-content"></div>';
         document.body.appendChild(popup);
@@ -43,6 +44,8 @@ Zepto(function($){
         pinLeft = localStorage.getItem(KEY_PINED_LEFT) || 0, pinTop = localStorage.getItem(KEY_PINED_TOP) || 0;
 
     var popupHandler = new Popup(popup, {
+        pinedMsg: '已固定窗口',
+        unPinedMsg: '取消固定',
         onPin: function(e, left, top) {
             localStorage.setItem(KEY_ISPINED, "true");
             console.info("Mark pin status as true.");

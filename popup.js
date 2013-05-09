@@ -10,6 +10,9 @@ Zepto(function($) {
             clsClose: 'close',
             clsPin: 'pin',
             clsPined: 'pined',
+            clsMsg: 'message',
+            pinedMsg: 'pined',
+            unPinedMsg: 'unpined',
             clsContent: '.pubmed-content',
             enableMouseover: true,
             enableSelect: true,
@@ -290,17 +293,27 @@ Zepto(function($) {
             return false;
         });
 
-        var pinTrigger = $(popup).find("." + config.clsPin);
+        var pinTrigger = $(popup).find("." + config.clsPin), msgEl =  $(popup).find("." + config.clsMsg);
         pinTrigger.bind("click", function(e) {
             if ($(pinTrigger).hasClass(config.clsPined)) {
                 call(config.onUnPin, handle, e)();
                 $(pinTrigger).removeClass(config.clsPined);
+                $(msgEl).html(config.unPinedMsg);
+                $(msgEl).css({opacity: 1});
+                $(msgEl).animate({ opacity: 0 }, 1000, 'ease-out');
                 isPined = false;
             } else {
                 var position = Zepto(popup).position();
                 call(config.onPin, handle, e, position.left, position.top)();
                 pinLeft = position.left; pinTop  = position.top;
                 $(pinTrigger).addClass(config.clsPined);
+
+                $(msgEl).html(config.pinedMsg);
+                $(msgEl).css({opacity: 0});
+                $(msgEl).animate({ opacity: 1 }, 800, 'ease-out');
+                setTimeout(function() {
+                    $(msgEl).animate({ opacity: 0 }, 500, 'ease-out');
+                }, 2000)
                 isPined = true;
             }
             return false;
