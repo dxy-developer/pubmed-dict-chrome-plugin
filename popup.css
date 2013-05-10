@@ -16,6 +16,11 @@ z {
     background: url('dictionary.png') no-repeat scroll -999em -999em;
 }
 
+div.pubmed-popup * {
+    font-size: 12px!important;
+    text-align: left!important;
+}
+
 div.pubmed-popup {
     font: 12px/1.5em arial,verdana,'Helvetica',sans-serif!important;
     display: none;
@@ -40,6 +45,7 @@ div.pubmed-popup .popup-title {
     cursor: move;
     height: 20px;
     line-height: 20px;
+    text-align: left!important;
 }
 
 div.pubmed-popup .popup-title .message {
@@ -109,7 +115,7 @@ div.pubmed-popup .pubmed-content h4 span {
 
 div.pubmed-popup .pubmed-content .more {
     display: block;
-    text-align: right;
+    text-align: right!important;
     margin-top: .5em;
 }
 
