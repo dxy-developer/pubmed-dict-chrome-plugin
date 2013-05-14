@@ -134,13 +134,7 @@ Zepto(function($) {
             var nodeName = e.target.nodeName.toLowerCase();
 
             var target = e.target;
-            //console.info(target);
-
-            if (handle.disableSelectEvent) {
-                return;
-            }
-
-            if (inElement(e.target, popup)) {
+            if (handle.disableSelectEvent || inElement(e.target, popup)) {
                 return;
             }
  
@@ -195,8 +189,6 @@ Zepto(function($) {
                     invadeNodes(e);
                 }
             }, handle), config.delay);
-
-            stopEvent(e);
         };
 
 
@@ -350,7 +342,7 @@ Zepto(function($) {
                     params.top = getCss(target, "top");
                 }
 
-                bar.addEventListener("mousedown", function(event) {
+                bar.addEventListener("mousedown", function(e) {
                     params.flag = true;
                     if(!event){
                         event = window.event;
@@ -369,11 +361,14 @@ Zepto(function($) {
                         style.webkitUserSelect = "none";
 
                     allowPin = true;
-                    stopEvent(e);
+                    if (inElement(e.target, popup)) {
+                        stopEvent(e);
+                    }
                 });
 
                 document.addEventListener("mouseup", function(e) {
                     params.flag = false;	
+
                     if(getCss(target, "left") !== "auto"){
                         params.left = getCss(target, "left");
                     }
@@ -392,7 +387,9 @@ Zepto(function($) {
                         style.userSelect = "auto"; 
                         style.webkitUserSelect = "auto";
 
-                    stopEvent(e);
+                    if (inElement(e.target, popup)) {
+                        stopEvent(e);
+                    }
                 });
 
                 document.addEventListener("mousemove", function(event) {
