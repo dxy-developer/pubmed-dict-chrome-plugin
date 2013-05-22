@@ -33,10 +33,21 @@
 
 
         var fetcherHandle = new Fetcher({
-            onFinished: function(response) {
-                var html = fetcherHandle.getResponseHTML(response);
-                searchContent.innerHTML = (html.length > 0) ? html : getMessage("notfound");
-            },
+            onFinished: (function() {
+                var timer;
+                return function(response) {
+                    var html = Zepto.trim(fetcherHandle.getResponseHTML(response));
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
+                    timer = setTimeout(function() {
+                        console.log("getResponseHTML: " + html);
+                        if (html.length) {
+                            $(searchContent).html(html);
+                        }
+                    }, 200);
+                };
+            })(),
 
             onOptionsUpdated: function(config) {
 
