@@ -6,11 +6,6 @@
  */
 
 ~function(cscope) {
-    var isSogouExplorer = false;
-    if (typeof sogouExplorer != 'undefined') {
-        isSogouExplorer = true;
-    }
-
     /**
      * Cacher, cache by localStorage
      */
@@ -90,56 +85,38 @@
     }
 
     // Bind Message Listener
-    console.info('AddListener is started.');
-    if (!isSogouExplorer) {
-        chrome.extension.onConnect.addListener(function(port) {
-            console.info('AddListener is started.');
-            port.onMessage.addListener(function(msg) {
-                console.info('Recived message ' + msg.words);
-                fetchTranslate(msg.words, function(data) {
-                    port.postMessage(data);
-                });
+    console.log('AddListener is started.');
+    chrome.extension.onConnect.addListener(function(port) {
+        console.info('AddListener is started.');
+        port.onMessage.addListener(function(msg) {
+            console.info('Recived message ' + msg.words);
+            fetchTranslate(msg.words, function(data) {
+                port.postMessage(data);
             });
         });
-    } else {
-        sogouExplorer.extension.onRequest.addListener(
-            function(request, sender, sendResponse) {
-                console.info('Recived message ' + request.words);
-                if (request.command == "searchWords") {
-                    fetchTranslate(request.words, sendResponse);
-                }
-            }
-        )
-    }
+    });
 
     /**
      * Create a context menu
      */
-    if (!isSogouExplorer) {
-        chrome.runtime.onInstalled.addListener(function() {
-            chrome.contextMenus.create({
-              "id": "DxyDictSearcher",
-              "title" : chrome.i18n.getMessage("searchWithDXYDict"),
-              "type" : "normal",
-              "contexts" : ["selection"]
-            });
+    chrome.contextMenus.create({
+        "id": "DxyDictSearcher",
+        "title" : chrome.i18n.getMessage("searchWithDXYDict"),
+        "type" : "normal",
+        "contexts" : ["selection"]
+    });
 
-            chrome.contextMenus.onClicked.addListener(function(info, tab) {
-                var selectionText = info.selectionText || false;
-                if (selectionText && selectionText.length) {
-                    chrome.tabs.create({
-                        url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
-                    });
-                }
+    chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        var selectionText = info.selectionText || false;
+        console.log("Context menu has selected text '" + selectionText + "'");
+        if (selectionText && selectionText.length) {
+            chrome.tabs.create({
+                url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
             });
-
-            getScript(URL_GA_SCRIPT, function() {
-                console.log("Analytics data has sended.");
-            });
-        });
-    }
+        }
+    });
 
     // Bind to global cscope
     cscope.fetchTranslate = fetchTranslate;
     cscope.Cacher = Cacher;
-}(window);
+} (window);
