@@ -20,11 +20,6 @@
             }
         }
 
-        var isSogouExplorer = false;
-        if (typeof sogouExplorer != 'undefined') {
-            isSogouExplorer = true;
-        }
-
         var defOptions = {
             'select': 'true',
             'hover': 'false',
@@ -119,23 +114,14 @@
             }
         };
 
-        var port = null;
-        if (!isSogouExplorer) {
-            port = chrome.extension.connect({name: "wordRequester"});
-            if (config.onFinished) {
-                port.onMessage.addListener(config.onFinished);
-            }
+        var port = chrome.extension.connect({name: "wordRequester"});
+        if (config.onFinished) {
+            port.onMessage.addListener(config.onFinished);
         }
 
         handle = _.extend(handle, {
             getResponseHTML: getResponseHTML,
             fetchWord: function(word) {
-                if (isSogouExplorer) {
-                    return sogouExplorer.extension.sendRequest({
-                        command: "searchWords", words: sText
-                    }, config.onFinished ? config.onFinished : null);
-                }
-
                 port.postMessage({words: word});
             },
             updateOptions: function() {
