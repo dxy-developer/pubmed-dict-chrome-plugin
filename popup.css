@@ -49,6 +49,9 @@ div.pubmed-popup .popup-title {
 }
 
 div.pubmed-popup .popup-title .message {
+    background: none;
+    border: none;
+    padding: 0px;
     display: block;
     height: 18px;
     position: absolute;
