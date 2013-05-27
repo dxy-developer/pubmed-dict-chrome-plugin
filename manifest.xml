@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<extension> 
+    <id>cn.dxy.pubmed.dict</id> 
+    <name>丁香园医学英汉词典</name> 
+    <author>丁香园</author>
+    <show_icon>true</show_icon> 
+    <description>收录百万医学词汇，支持划词翻译，提供论文例句</description> 
+    <version>1.2.0</version>
+    <background page="background.html" />
+    <request_api_version>1</request_api_version>
+    <popup page="popup.html" width="300" height="550" />
+    <content_scripts> 
+        <content_script runat="document_complete" core_type="webkit">
+            <match>http://*/*</match> 
+            <js>libs/underscore.min.js</js> 
+            <js>libs/zepto.min.js</js> 
+            <js>common.js</js> 
+            <js>options.js</js> 
+            <js>fetcher.js</js> 
+            <js>popup.js</js> 
+            <js>content.js</js> 
+            <css>popup.css</css> 
+        </content_script> 
+    </content_scripts> 
+</extension> 
