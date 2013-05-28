@@ -85,8 +85,18 @@
     }
 
     // Bind Message Listener
-    console.log('AddListener is started.');
-    chrome.extension.onConnect.addListener(function(port) {
+    var runtimeOrExtension = sogouExplorer.runtime && sogouExplorer.runtime.sendMessage ?  'runtime' : 'extension';
+    sogouExplorer[runtimeOrExtension].onMessage.addListener(
+        function(message, sender, sendResponse) {
+            console.info('Recived message ' + message.words);
+            fetchTranslate(message.words, function(data) {
+                console.info(data);
+                sendResponse(data);
+            });
+    });
+    
+    /*
+    sogouExplorer.extension.onConnect.addListener(function(port) {
         console.info('AddListener is started.');
         port.onMessage.addListener(function(msg) {
             console.info('Recived message ' + msg.words);
@@ -95,26 +105,28 @@
             });
         });
     });
+    */
 
     /**
      * Create a context menu
      */
-    chrome.contextMenus.create({
+    /*
+    sogouExplorer.contextMenus.create({
         "id": "DxyDictSearcher",
-        "title" : chrome.i18n.getMessage("searchWithDXYDict"),
+        "title" : sogouExplorer.i18n.getMessage("searchWithDXYDict"),
         "type" : "normal",
         "contexts" : ["selection"]
     });
-
-    chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    sogouExplorer.contextMenus.onClicked.addListener(function(info, tab) {
         var selectionText = info.selectionText || false;
         console.log("Context menu has selected text '" + selectionText + "'");
         if (selectionText && selectionText.length) {
-            chrome.tabs.create({
+            sogouExplorer.tabs.create({
                 url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
             });
         }
     });
+    */
 
     // Bind to global cscope
     cscope.fetchTranslate = fetchTranslate;

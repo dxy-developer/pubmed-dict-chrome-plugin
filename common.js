@@ -5,23 +5,6 @@
  */
 
 ~function(cscope) {
-    var isSogouExplorer = false;
-    if (typeof sogouExplorer != 'undefined') {
-        isSogouExplorer = true;
-    }
-
-    /*
-    var _gaq = (typeof self != 'undefined' && self._gaq) ? self._gaq : _gaq;
-        if (!_gaq) {
-            _gaq = [];
-            _gaq.push(['_gaqNotAvaiable', true]);
-        }
-        _gaq.push(['_setAccount', 'UA-38076372-14']);
-        _gaq.push(['_trackPageview']);
-    cscope._gaq = _gaq;
-    cscope.URL_GA_SCRIPT = "https://ssl.google-analytics.com/ga.js?t=" + (+new Date()) +"&fuckgfw";
-    */
-
     var getMessage = (function() {
         var messages = {
             "APIKEY_ERROR": "参数错误",
@@ -36,16 +19,11 @@
         };
 
         return function(id) {
-            if (isSogouExplorer) {
-                if (typeof messages[id] != 'undefined') {
-                    return messages[id];
-                }
-
-                return messages['default'];
-
-            } else {
-                return chrome.i18n.getMessage(id);
+            if (typeof messages[id] != 'undefined') {
+                return messages[id];
             }
+
+            return messages['default'];
         }
     })();
     cscope.getMessage = getMessage;
@@ -60,10 +38,12 @@
     };
 
     // 载入 GA 代码
+    /*
     cscope.getScript(chrome.extension.getURL("gs-inject.js"), function() {
         cscope.markAnalyticsData = function(data) {
             console.info("Recived ga data " + data);
             document.body.setAttribute("ga", JSON.stringify(data));
         };
     });
+    */
 } (window);

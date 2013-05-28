@@ -103,7 +103,7 @@
                     }
                 });
             } else if (data.phonetic.length) {
-                phonetic = '('+ Zepto.trim(data.phonetic) +')';
+                phonetic = '('+  data.phonetic +')';
             }
 
             return {
@@ -114,15 +114,18 @@
             }
         };
 
-        var port = chrome.extension.connect({name: "wordRequester"});
-        if (config.onFinished) {
-            port.onMessage.addListener(config.onFinished);
-        }
+        var runtimeOrExtension = 
+            sogouExplorer.runtime && sogouExplorer.runtime.sendMessage ?  'runtime' : 'extension';
 
         handle = _.extend(handle, {
             getResponseHTML: getResponseHTML,
             fetchWord: function(word) {
-                port.postMessage({words: word});
+                sogouExplorer[runtimeOrExtension].sendMessage({words: word}, function(response) {
+                    console.info(response);
+                    if (config.onFinished) {
+                        config.onFinished(response);
+                    }
+                });
             },
             updateOptions: function() {
                 var callback = function() {}

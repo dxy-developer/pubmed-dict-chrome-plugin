@@ -19,7 +19,7 @@ Zepto(function($){
             link.media = 'all';
         head.appendChild(link);
     }
-    loadCSS(chrome.extension.getURL("popup.css"));
+    loadCSS(sogouExplorer.extension.getURL("popup.css"));
 
     var popup = document.createElement('div');
         popup.className = "pubmed-popup";
@@ -38,7 +38,8 @@ Zepto(function($){
         pinedMsg: '已固定窗口',
         unPinedMsg: '取消固定',
         onPin: function(e, left, top) {
-            chrome.storage.sync.set({
+            /*
+            sogouExplorer.storage.sync.set({
                 KEY_ISPINED: "true", 
                 KEY_PINED_LEFT: left,
                 KEY_PINED_TOP: top
@@ -50,10 +51,12 @@ Zepto(function($){
                     markAnalyticsData(['_trackEvent', 'popup', 'lock', 'lock']);
                 } catch(error) { }
             });
+            */
         },
 
         onUnPin: function(e) {
-            chrome.storage.local.set({
+            /*
+            sogouExplorer.storage.local.set({
                 KEY_ISPINED: "false"
             }, function() {
                 console.info("Mark pin status as false");
@@ -62,6 +65,7 @@ Zepto(function($){
                     markAnalyticsData(['_trackEvent', 'popup', 'unlock', 'unlock']);
                 } catch(error) { }
             });
+            */
         },
 
         onShow: function(e) {
@@ -100,12 +104,12 @@ Zepto(function($){
         onFinished: (function() {
             var timer;
             return function(response) {
-                var html = Zepto.trim(fetcherHandle.getResponseHTML(response));
+                var html = fetcherHandle.getResponseHTML(response);
                 if (timer) {
                     clearTimeout(timer);
                 }
                 timer = setTimeout(function() {
-                    console.log("getResponseHTML: " + html);
+                    //console.log("getResponseHTML: " + html);
                     $(popupHandler.popupContent).html(
                         html.length ? html: getMessage("notfound"));
                     popupHandler.decidePopupOffset();
@@ -137,8 +141,8 @@ Zepto(function($){
     var update = function() {
         fetcherHandle.updateOptions();
         popupHandler.hide();
-
-        chrome.storage.sync.get({KEY_ISPINED: "true", KEY_PINED_TOP: 0, KEY_PINED_LEFT: 0}, function(result) {
+        /*
+        sogouExplorer.storage.sync.get({KEY_ISPINED: "true", KEY_PINED_TOP: 0, KEY_PINED_LEFT: 0}, function(result) {
             if (result.KEY_ISPINED == "true") {
                 pinLeft = result.KEY_PINED_LEFT || 0;
                 pinTop  = result.KEY_PINED_TOP  || 0;
@@ -150,6 +154,7 @@ Zepto(function($){
                 console.info("Mark as UnPin.");
             }
         });
+        */
     };
 
     update();
