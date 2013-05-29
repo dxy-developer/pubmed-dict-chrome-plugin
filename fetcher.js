@@ -5,6 +5,7 @@
  */
 
 (function(cscope) {
+    //var sendMessage = sogouExplorer.extension.sendMessage;
     var Fetcher = function(config) {
         var defConfig = {
             onOptionsUpdated: null, onFinished: null, onError: null
@@ -54,14 +55,14 @@
         // http://qa.linkmed.com.cn/confluence/pages/viewpage.action?pageId=35324223
         var getResponseHTML = function(response) {
             var result = "";
-            if (response && response.data) {
-                if (response.data.ERROR) {
+            if (response && (response.definition || response.data)) {
+                if (response.data && response.data.ERROR) {
                     if (config.onError) {
                         call(config.onError, handle, response.data.ERROR)();
                     }
                     //result = getMessage(response.data.ERROR);
                 } else {
-                    result = formatMessage(formatter, getValidObject(response.data))
+                    result = formatMessage(formatter, getValidObject(response.data || response))
                 }
             } 
 
@@ -92,7 +93,7 @@
             }
             
             var phonetic = "";
-            if (Zepto.isArray(data.phonetic)) {
+            if (Object.prototype.toString.call( data.phonetic ) === '[object Array]') {
                Zepto.each(data.phonetic, function(index, item) {
                     if (item.BrE) {
                       phonetic += '英['+ item.BrE +'] ';
@@ -114,18 +115,15 @@
             }
         };
 
-        var runtimeOrExtension = 
-            sogouExplorer.runtime && sogouExplorer.runtime.sendMessage ?  'runtime' : 'extension';
+        var port = sogouExplorer.extension.connect({name: "wordRequester"});
+        if (config.onFinished) {
+            port.onMessage.addListener(config.onFinished);
+        }
 
         handle = _.extend(handle, {
             getResponseHTML: getResponseHTML,
             fetchWord: function(word) {
-                sogouExplorer[runtimeOrExtension].sendMessage({words: word}, function(response) {
-                    console.info(response);
-                    if (config.onFinished) {
-                        config.onFinished(response);
-                    }
-                });
+                port.postMessage({words: word});
             },
             updateOptions: function() {
                 var callback = function() {}

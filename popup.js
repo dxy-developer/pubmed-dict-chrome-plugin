@@ -131,17 +131,15 @@ Zepto(function($) {
          * 选择取词
          */
         var mouseupTrigger = function(e){
-            var target = e.target, nodeName = target.nodeName.toLowerCase();
-            console.info(nodeName);
+            var nodeName = (e.target.nodeName || e.target.tagName).toLowerCase();
+            if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
+                return;
+            }
 
             if (handle.disableSelectEvent || inElement(e.target, popup)) {
                 return;
             }
  
-            if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
-                return;
-            }
-       
             var sText = (document.selection == undefined) ?  
                             document.getSelection().toString() : document.selection.createRange().text;
                 sText = sText.trim();
@@ -163,17 +161,12 @@ Zepto(function($) {
          */
         var timer, hoverX, hoverY;
         var mouseoverTrigger = function(e) {
-            var target = e.target, nodeName = target.nodeName.toLowerCase();
-
-            if (handle.disableMouseoverEvent) {
-                return;
-            }
-
-            if (inElement(target, popup)) {
-                return;
-            }
-
+            var nodeName = (e.target.nodeName || e.target.tagName).toLowerCase();
             if (nodeName == 'input' || nodeName == 'textarea' || nodeName == 'select') {
+                return;
+            }
+
+            if (handle.disableMouseoverEvent || inElement(e.target, popup)) {
                 return;
             }
 
@@ -267,9 +260,9 @@ Zepto(function($) {
                     call(config.onShow, handle, e)();
                 }
                 decidePopupPostioin(e);
-                //popup.style.display = 'block';
-                $(popup).css({opacity: 0, display: "block"});
-                $(popup).animate({ opacity: .95 }, 250, 'ease-in');
+                popup.style.display = 'block';
+                //$(popup).css({opacity: 0, display: "block"});
+                //$(popup).animate({ opacity: .95 }, 250, 'ease-in');
             },
             hide: function(e) {
                 if (config.onHide) {

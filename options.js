@@ -1,44 +1,21 @@
 ~function(cscope) {
-    var isSogouExplorer = false;
-    if (typeof sogouExplorer != 'undefined') {
-        isSogouExplorer = true;
-    }
-
+    var sendMessage = sogouExplorer.extension.sendMessage;
     var get = (function() {
-
         return function(key, defVal, callback) {
-            if (isSogouExplorer) {
-                var value = localStorage.getItem(key);
-                if (!value) {
-                    value = defVal;
-                }
-                return callback && callback(value);
-            }
-
-            chrome.storage.sync.get(key, function(data) {
-                var value = (data[key]) ? data[key] : defVal;
-                callback(value);
+            sendMessage({storage: key, method: "get"}, function(response) {
+                callback && callback(response ? response : defVal);
             });
         }
     })();
 
     var getAll = function(callback) {
-        if (isSogouExplorer) return null;
-        chrome.storage.sync.get(callback);
+        return null;
     }
 
     var set = function(key, value, callback) {
-        if (isSogouExplorer) {
-            localStorage.setItem(key, value);
-            if (callback) {
-                callback(value);
-            }
-
-        } else {
-            var data = {};
-            data[key] = value;
-            chrome.storage.sync.set(data, callback ? callback : function(){});
-        }
+        sendMessage({storage: key, value: value, method: "set"}, function(response) {
+            callback && callback(response ? response : null);
+        });
     }
 
     var Option = {
@@ -95,14 +72,13 @@
     var btnClearCache = document.getElementById("J_clearCache");
     if (btnClearCache) {
         btnClearCache.addEventListener("click", function() {
-            var backgroundPage = chrome.extension.getBackgroundPage();
-            if (backgroundPage) {
-                backgroundPage.Cacher.clear();
+                sendMessage({storage: true, method: "clear"}, function(response) {
+                    console.log("All caches is cleared.");
+                });
                 try {
                     markAnalyticsData(['_trackEvent', 'options_page', 'click', 'clear_cache']);
                 } catch(e) {}
-            }
-        });
+            });
     }
 
     // ga

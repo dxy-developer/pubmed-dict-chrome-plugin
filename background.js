@@ -11,8 +11,12 @@
      */
     var Cacher = (function() {
         var fetchFromCache = function(words) {
-            var keys = '_' + words;
-            return JSON.parse(localStorage.getItem(keys));
+            var keys = '_' + words, data = localStorage.getItem(keys);
+            if (data) {
+                return {error: 0, data: JSON.parse(data)};
+            } else {
+                return {error: 1, type: null, xhr: null};
+            }
         };
 
         var saveToCache = function(words, data) {
@@ -33,7 +37,8 @@
             },
 
             isCached: function(words) {
-                return !!fetchFromCache(words);
+                var data = fetchFromCache(words);
+                return (data.error) ? false : true;
             },
 
             fetchFromCache: fetchFromCache,
@@ -43,59 +48,34 @@
 
     function getRequestUrl(word) {
         var baseUrl = 'http://dict.pubmed.cn/webservices/dict/openapi/3223231d'
-        return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
+            return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
     }
 
-    var requestIsRunning = false, timer = false;
     function fetchTranslate(words, callback)
     {
         if (Cacher.isCached(words)) {
             // if cache prisented
             console.info("Cache words '"+ words +"' hited, get from localStorage.")
-            var data = Cacher.fetchFromCache(words);
-            return callback(data);
+            return callback(Cacher.fetchFromCache(words));
         }
 
-        if (timer) {
-            clearTimeout(timer)
-        }
-        timer = setTimeout(function() {
-            // send resquest to service
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function(data) {
-                if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
-                    var resp = JSON.parse(xhr.responseText);
-                    var data = {
-                        _responseText: xhr.responseText,
-                        data: resp
-                    };
-                    callback(data);
-                    Cacher.saveToCache(words, data);
-                } else {
-                    callback(null);
-                }
-                requestIsRunning = false;
+        Zepto.ajax({
+            type: 'GET',
+            url: getRequestUrl(words),
+            dataType: 'json',
+            timeout: 2000,
+            success: function(data) {
+                Cacher.saveToCache(words, data);
+                callback({error: 0, data: data});
+            },
+            error: function(xhr, type){
+                console.error(xhr, type);
+                callback({error: 1, xhr: xhr, type: type});
             }
-
-            console.info('[NET] Request from ' + getRequestUrl(words));
-            xhr.open('GET', getRequestUrl(words), true);
-            requestIsRunning = true;
-            xhr.send();
-        }, 0);
+        });
     }
 
-    // Bind Message Listener
-    var runtimeOrExtension = sogouExplorer.runtime && sogouExplorer.runtime.sendMessage ?  'runtime' : 'extension';
-    sogouExplorer[runtimeOrExtension].onMessage.addListener(
-        function(message, sender, sendResponse) {
-            console.info('Recived message ' + message.words);
-            fetchTranslate(message.words, function(data) {
-                console.info(data);
-                sendResponse(data);
-            });
-    });
-    
-    /*
+
     sogouExplorer.extension.onConnect.addListener(function(port) {
         console.info('AddListener is started.');
         port.onMessage.addListener(function(msg) {
@@ -105,28 +85,39 @@
             });
         });
     });
-    */
 
-    /**
-     * Create a context menu
-     */
-    /*
-    sogouExplorer.contextMenus.create({
-        "id": "DxyDictSearcher",
-        "title" : sogouExplorer.i18n.getMessage("searchWithDXYDict"),
-        "type" : "normal",
-        "contexts" : ["selection"]
+
+    // Bind Message Listener
+    sogouExplorer.extension.onMessage.addListener (
+        function(message, sender, sendResponse) {
+            /*
+            if (message.words) {
+                fetchTranslate(message.words, function(data) {
+                    console.info(data);
+                    sendResponse(data);
+                });
+            }
+            */
+            
+            if (message.storage) {
+                var key = message.storage, value = message.value, method = message.method;
+                switch(method) {
+                    case "set":
+                        localStorage.setItem("_" + key + "_", value);
+                        break;
+
+                    case "get":
+                        value = localStorage.getItem("_" + key + "_");
+                        break;
+
+                    case "clear":
+                        localStorage.clear();
+                        break;
+                }
+
+                sendResponse(value);
+            }
     });
-    sogouExplorer.contextMenus.onClicked.addListener(function(info, tab) {
-        var selectionText = info.selectionText || false;
-        console.log("Context menu has selected text '" + selectionText + "'");
-        if (selectionText && selectionText.length) {
-            sogouExplorer.tabs.create({
-                url: "http://dict.pubmed.cn/"+ encodeURIComponent(selectionText) +".htm"
-            });
-        }
-    });
-    */
 
     // Bind to global cscope
     cscope.fetchTranslate = fetchTranslate;

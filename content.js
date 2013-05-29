@@ -38,33 +38,31 @@ Zepto(function($){
         pinedMsg: '已固定窗口',
         unPinedMsg: '取消固定',
         onPin: function(e, left, top) {
-            /*
-            sogouExplorer.storage.sync.set({
-                KEY_ISPINED: "true", 
-                KEY_PINED_LEFT: left,
-                KEY_PINED_TOP: top
-            }, function(){
-                console.info("Mark pin status as true.");
-                console.info("Mark pin left,top status " + left + "," + top);
+            var values = [
+                { "key": KEY_ISPINED,    "value": "true" },
+                { "key": KEY_PINED_LEFT, "value": left   },
+                { "key": KEY_PINED_TOP,  "value": top}
+            ];
 
-                try {
-                    markAnalyticsData(['_trackEvent', 'popup', 'lock', 'lock']);
-                } catch(error) { }
-            });
+            for (var i = 0, len = values.length; i < len; i++) {
+                var item = values[i];
+                Option.set(item.key, item.value, function(v) { });
+            }
+
+            /*
+            try {
+                markAnalyticsData(['_trackEvent', 'popup', 'lock', 'lock']);
+            } catch(error) { }
             */
         },
 
         onUnPin: function(e) {
-            /*
-            sogouExplorer.storage.local.set({
-                KEY_ISPINED: "false"
-            }, function() {
-                console.info("Mark pin status as false");
+            Option.set(KEY_ISPINED, "false", function(v) { });
 
+            /*
                 try {
                     markAnalyticsData(['_trackEvent', 'popup', 'unlock', 'unlock']);
                 } catch(error) { }
-            });
             */
         },
 
@@ -104,16 +102,21 @@ Zepto(function($){
         onFinished: (function() {
             var timer;
             return function(response) {
-                var html = fetcherHandle.getResponseHTML(response);
+                var html = "";
+                if (response.error) {
+                    html = response.type;
+                } else {
+                    html = fetcherHandle.getResponseHTML(response.data);
+                }
+
                 if (timer) {
                     clearTimeout(timer);
                 }
                 timer = setTimeout(function() {
-                    //console.log("getResponseHTML: " + html);
                     $(popupHandler.popupContent).html(
                         html.length ? html: getMessage("notfound"));
                     popupHandler.decidePopupOffset();
-                }, 200);
+                }, 0);
             };
         })(),
 
@@ -141,20 +144,23 @@ Zepto(function($){
     var update = function() {
         fetcherHandle.updateOptions();
         popupHandler.hide();
-        /*
-        sogouExplorer.storage.sync.get({KEY_ISPINED: "true", KEY_PINED_TOP: 0, KEY_PINED_LEFT: 0}, function(result) {
-            if (result.KEY_ISPINED == "true") {
-                pinLeft = result.KEY_PINED_LEFT || 0;
-                pinTop  = result.KEY_PINED_TOP  || 0;
+        Option.get(KEY_ISPINED, "true", function(v) {
+            if (v == "true") {
+                Option.get(KEY_PINED_TOP, 0, function(v) {
+                    pinTop = v || 0;
 
-                popupHandler.markAsPin(pinLeft, pinTop);
-                console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
+                    Option.get(KEY_PINED_LEFT, 0, function(v) {
+                        pinLeft = v || 0;
+
+                        console.info("The value of Pin left,top is " + pinLeft + "," + pinTop);
+                        popupHandler.markAsPin(pinLeft, pinTop);
+                    });
+                });
             } else {
                 popupHandler.markAsUnPin();
                 console.info("Mark as UnPin.");
             }
         });
-        */
     };
 
     update();
