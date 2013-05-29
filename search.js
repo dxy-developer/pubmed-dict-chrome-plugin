@@ -5,15 +5,6 @@
  */
 
 ~function() {
-        var isSogouExplorer = false;
-        if (typeof sogouExplorer != 'undefined') {
-            isSogouExplorer = true;
-        }
-
-        if (isSogouExplorer) {
-            Option = sogouExplorer.extension.getBackgroundPage().Option;
-        }
-
         var searchForm    = document.getElementById('J_Form'),
             searchWord    = document.getElementById('J_Word'),
             searchContent = document.getElementById("J_Content"), 
@@ -28,6 +19,7 @@
             if (e.stopPropagation) {
                 e.stopPropagation();
             }
+
             e.preventDefault();
         }
 
@@ -36,7 +28,7 @@
             onFinished: (function() {
                 var timer;
                 return function(response) {
-                    var html = Zepto.trim(fetcherHandle.getResponseHTML(response));
+                    var html = fetcherHandle.getResponseHTML(response);
                     if (timer) {
                         clearTimeout(timer);
                     }
@@ -74,17 +66,12 @@
         });
 
         configEl.addEventListener("click", function(e) {
-            if (isSogouExplorer) {
-                var path = sogouExplorer.extension.getURL("options.html");
-                sogouExplorer.tabs.create({url:path});
-            }  else {
-                chrome.tabs.create({url: "options.html"});
-            }
+            var path = sogouExplorer.extension.getURL("options.html");
+            sogouExplorer.tabs.create({url:path});
 
             try {
                 markAnalyticsData(['_trackEvent', 'popup_page', 'click', 'advance_config']);
             } catch(e) {}
-
             stopEvent(e);
         });
 
