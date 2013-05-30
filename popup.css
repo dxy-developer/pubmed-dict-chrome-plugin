@@ -232,8 +232,8 @@ div.pubmed-popup .pubmed-content dl dd hr {
     overflow-y: auto;
 }
 
-body {
+.chrome-popup {
     width: 300px;
     height: 400px;
-    overflow: hidden;
+    overflow: hidden!important;
 }
