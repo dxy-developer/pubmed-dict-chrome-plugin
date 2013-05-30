@@ -159,7 +159,7 @@ div.pubmed-popup .pubmed-content dl dd hr {
     position: static;
     border-radius: none;
     box-shadow: none;
-    width: 250px!important;
+    width: 300px;
     border: none;
     background-color: #eeeff4;
 }
@@ -185,7 +185,7 @@ div.pubmed-popup .pubmed-content dl dd hr {
 
 .chrome-popup div.pubmed-popup form input[type=text]{
     padding: .5em 1em;
-    width: 100px;
+    width: 165px;
     display: inline-block;
     float: left;
     outline: none;
@@ -207,7 +207,11 @@ div.pubmed-popup .pubmed-content dl dd hr {
 }
 
 .chrome-popup .config-area {
+    position: fixed;
     padding: 0em;
+    bottom: 0px;
+    left: 10px;
+    width: 300px;
 }
 
 .chrome-popup .config-area p {
@@ -220,3 +224,16 @@ div.pubmed-popup .pubmed-content dl dd hr {
     margin: .5em 0;
 }
 
+.chrome-popup #J_PubMed_Popup #J_Content {
+    margin: 5px 0;
+    width: 280px;;
+    height: 300px;
+    overflow-x: hide;
+    overflow-y: auto;
+}
+
+body {
+    width: 300px;
+    height: 400px;
+    overflow: hidden;
+}

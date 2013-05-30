@@ -6,12 +6,16 @@
     </head>
     <body class="chrome-popup">
         <div class="pubmed-popup" id="J_PubMed_Popup">
+            <!--
             <h1 class="logo">Pubmed</h1>
+            -->
             <form action="" method="get" id="J_Form">
                 <input type="text" maxlength="32" name="words" id="J_Word" class="" value="" />
                 <button type="submit">Search</button>
             </form>
             <div class="pubmed-content" id="J_Content">
+                <img src="main.png" width="275" height="270"
+                style="border-radius: 10px; border: 1px double #ccc; display:block; margin: 0 auto;" />
             <!--
             <h4>{word_en} <span>({phonetic})</span></h4>
             <dl>
@@ -30,9 +34,9 @@
                 <p id="config"><a href=""> (高级设置)</a></p> 
             </div>
         </div>
-        <script src="libs/ga.js"></script>
         <script src="libs/zepto.min.js"></script>
         <script src="libs/underscore.min.js"></script>
+        <script src="libs/underscore.string.min.js"></script>
         <script src="common.js"></script>
         <script src="options.js"></script>
         <script src="fetcher.js"></script>

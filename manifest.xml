@@ -5,10 +5,10 @@
     <author>丁香园</author>
     <show_icon>true</show_icon> 
     <description>收录百万医学词汇，支持划词翻译，提供论文例句</description> 
-    <version>1.5.0</version>
+    <version>1.5.3</version>
     <background page="background.html" />
     <request_api_version>1</request_api_version>
-    <popup page="popup.html" width="300" height="550" />
+    <popup page="popup.html" width="310" height="400" />
     <content_scripts> 
         <content_script runat="document_complete" core_type="webkit">
             <match>http://*/*</match> 
