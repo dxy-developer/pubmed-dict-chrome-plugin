@@ -46,7 +46,7 @@
         return baseUrl + "/" + encodeURIComponent(word) + '?t=' + (+new Date());
     }
 
-    var requestIsRunning = false, timer = false;
+    var timer = false;
     function fetchTranslate(words, callback)
     {
         if (Cacher.isCached(words)) {
@@ -60,28 +60,27 @@
             clearTimeout(timer)
         }
         timer = setTimeout(function() {
-            // send resquest to service
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function(data) {
-                if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != null) {
-                    var resp = JSON.parse(xhr.responseText);
-                    var data = {
-                        _responseText: xhr.responseText,
-                        data: resp
-                    };
-                    callback(data);
-                    Cacher.saveToCache(words, data);
-                } else {
-                    callback(null);
-                }
-                requestIsRunning = false;
-            }
-
             console.info('[NET] Request from ' + getRequestUrl(words));
-            xhr.open('GET', getRequestUrl(words), true);
-            requestIsRunning = true;
-            xhr.send();
-        }, 0);
+            // send resquest to service
+            Zepto.ajax({
+                //type: 'GET',
+                url: getRequestUrl(words),
+                dataType: 'json',
+                timeout: 2000,
+                success: function(resp) {
+                    //console.info(resp);
+                    var data = {
+                        _responseText: resp.toString(), data: resp
+                    };
+
+                    Cacher.saveToCache(words, resp);
+                    callback(data);
+                },
+                error: function(xhr, type){
+                    console.error(xhr, type);
+                }
+            });
+        }, 5);
     }
 
     // Bind Message Listener
