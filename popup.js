@@ -128,12 +128,23 @@ Zepto(function($) {
 
 
         /**
+         * Get Selection Words
+         */
+        var getSelectionWords = function() {
+            var sText = (document.selection == undefined) ?  
+                document.getSelection().toString() : document.selection.createRange().text;
+
+            return Zepto.trim(sText);
+        }
+
+
+        /**
          * 选择取词
          */
         var mouseupTrigger = function(e){
             var nodeName = e.target.nodeName.toLowerCase();
+            var target = e.target, sText = getSelectionWords();
 
-            var target = e.target;
             if (handle.disableSelectEvent || inElement(e.target, popup)) {
                 return;
             }
@@ -142,9 +153,6 @@ Zepto(function($) {
                 return;
             }
        
-            var sText = (document.selection == undefined) ?  
-                            document.getSelection().toString() : document.selection.createRange().text;
-                sText = Zepto.trim(sText);
 
             if (sText.length > 0 && sText.length < MAX_WORD_LENGTH && rHasWord.test(sText)) {
                 console.log("Selected word is " + sText + ".");
@@ -163,9 +171,9 @@ Zepto(function($) {
          */
         var timer, hoverX, hoverY;
         var mouseoverTrigger = function(e) {
-            var target = e.target, nodeName = e.target.nodeName.toLowerCase();
+            var target = e.target, nodeName = e.target.nodeName.toLowerCase(), sText = getSelectionWords();
 
-            if (handle.disableMouseoverEvent) {
+            if (handle.disableMouseoverEvent || sText.length > 0) {
                 return;
             }
 
