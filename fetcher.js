@@ -54,16 +54,16 @@
         // http://qa.linkmed.com.cn/confluence/pages/viewpage.action?pageId=35324223
         var getResponseHTML = function(response) {
             var result = "";
-            if (response && response.data) {
-                if (response.data.ERROR) {
-                    if (config.onError) {
-                        call(config.onError, handle, response.data.ERROR)();
-                    }
-                    //result = getMessage(response.data.ERROR);
-                } else {
-                    result = formatMessage(formatter, getValidObject(response.data))
+            if (response.ERROR || (response.data && response.data.ERROR)) {
+                if (config.onError) {
+                    call(config.onError, handle, response.ERROR || response.data.ERROR)();
                 }
-            } 
+
+            } else {
+                var obj = getValidObject(response.data || response);
+                console.info(obj);
+                result = formatMessage(formatter, obj);
+            }
 
             return result;
         };

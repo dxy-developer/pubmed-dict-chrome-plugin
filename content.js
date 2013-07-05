@@ -100,16 +100,18 @@ Zepto(function($){
         onFinished: (function() {
             var timer;
             return function(response) {
+                console.log(response);
+
                 var html = Zepto.trim(fetcherHandle.getResponseHTML(response));
+                //console.log("getResponseHTML: " + html);
+
                 if (timer) {
                     clearTimeout(timer);
                 }
-                timer = setTimeout(function() {
-                    console.log("getResponseHTML: " + html);
-                    $(popupHandler.popupContent).html(
-                        html.length ? html: getMessage("notfound"));
+                timer = (html.length > 0) && setTimeout(function() {
+                    $(popupHandler.popupContent).html(html);
                     popupHandler.decidePopupOffset();
-                }, 200);
+                }, 100);
             };
         })(),
 
@@ -130,7 +132,9 @@ Zepto(function($){
         }, 
 
         onError: function(error) {
-            console.error("Error, Server response '" + getMessage(error) + "'.");
+            var message = getMessage(error);
+            console.error("Error, Server response '" + message + "'.");
+            $(popupHandler.popupContent).html(message);
         }
     });
 

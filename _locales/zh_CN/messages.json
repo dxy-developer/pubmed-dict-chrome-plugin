@@ -28,7 +28,7 @@
     },
 
     "NO_RESULTS": {
-        "message": "抱歉，暂无结果"
+        "message": "抱歉，没有找到需要的结果"
     },
 
     "APIKEY_ERROR": {

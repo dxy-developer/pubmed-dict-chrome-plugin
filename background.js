@@ -22,7 +22,8 @@
             } catch (e) {
                 if (e == QUOTA_EXCEEDED_ERR) {
                     //data wasn't successfully saved due to quota exceed so throw an error
-                    console.error('Quota exceeded!'); 
+                    console.error('Quota exceeded! Clear...'); 
+                    localStorage.clear();
                 }
             }
         };
@@ -47,26 +48,28 @@
     }
 
     var timer = false;
-    function fetchTranslate(words, callback)
-    {
-        if (Cacher.isCached(words)) {
-            // if cache prisented
-            console.info("Cache words '"+ words +"' hited, get from localStorage.")
-            var data = Cacher.fetchFromCache(words);
-            return callback(data);
-        }
-
+    function fetchTranslate(words, callback, error) {
         if (timer) {
             clearTimeout(timer)
         }
+
+        if (Cacher.isCached(words)) {
+            // if cache prisented
+            console.info("Cache words '"+ words +"' hited, get from localStorage.")
+            return callback(Cacher.fetchFromCache(words));
+        }
+
+        var requestUrl = getRequestUrl(words);
+            // requestUrl = "http://localhost/test.php";
+
         timer = setTimeout(function() {
             console.info('[NET] Request from ' + getRequestUrl(words));
             // send resquest to service
             Zepto.ajax({
                 //type: 'GET',
-                url: getRequestUrl(words),
+                url: requestUrl,
                 dataType: 'json',
-                timeout: 2000,
+                timeout: 3000,
                 success: function(resp) {
                     //console.info(resp);
                     var data = {
@@ -78,6 +81,9 @@
                 },
                 error: function(xhr, type){
                     console.error(xhr, type);
+                    if (error) {
+                        alert(data);
+                    }
                 }
             });
         }, 5);
@@ -91,6 +97,10 @@
             console.info('Recived message ' + msg.words);
             fetchTranslate(msg.words, function(data) {
                 port.postMessage(data);
+            }, function() {
+                port.postMessage({
+                    error: 1
+                });
             });
         });
     });
